@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checkout — Iskaparate.ph</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/css/styles.css">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+</head>
+<body data-page="checkout">
+<div id="site-header"></div>
+<main class="container stack" style="padding-top:32px;padding-bottom:64px;--g:24px" id="root"></main>
+<div id="site-footer"></div>
+
+<script src="assets/js/site.js"></script>
+<script>
+(function () {
+  const { cart, fmt, esc, store } = ISK;
+  const root = document.getElementById('root');
+  const groups = cart.groups();
+  const state = { reply: 'waiting', method: 'gcash', paid: false, counterTaken: false, paidTotal: 0 };
+  const methods = [
+    { id: 'gcash', label: 'GCash', note: 'E-wallet' },
+    { id: 'maya', label: 'Maya', note: 'E-wallet' },
+    { id: 'qrph', label: 'QR Ph', note: 'Scan with any bank app' },
+    { id: 'card', label: 'Credit or debit card', note: 'Visa, Mastercard' },
+    { id: 'bank', label: 'Online banking', note: 'BPI, BDO, UnionBank and more' }
+  ];
+  const confirmGroups = groups.filter((g) => g.confirmFirst);
+  const sellerName = (g) => (g.shopId === 'rosa' ? 'Aling Rosa' : g.shop.name);
+  const now = new Date();
+  const sentAt = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }).toLowerCase();
+  const sentDay = now.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+
+  if (!groups.length) {
+    root.innerHTML = `<h1 class="h1">Checkout</h1><div class="card stack" style="--g:14px;align-items:flex-start;padding:32px"><h2 class="h3">Nothing to check out yet</h2><p class="muted">Your cart is empty.</p><a class="btn btn-primary" href="index.html#featured">Start shopping</a></div>`;
+    return;
+  }
+  // No made-to-order items: everything is ready to pay
+  if (!confirmGroups.length) state.reply = 'accepted';
+
+  function payable() {
+    return groups.filter((g) => !(g.confirmFirst && state.reply === 'declined'));
+  }
+  function total() { return payable().reduce((n, g) => n + g.subtotal + g.shipping, 0); }
+
+  function statusBlock(g) {
+    const who = sellerName(g);
+    const when = (g.how === 'pickup' ? 'pickup ' : 'delivery ') + (g.meta.date || 'on the agreed date');
+    if (!g.confirmFirst) return `<div class="row note note-green" style="--g:12px">${tick()}<span class="bold">In stock, accepted automatically</span></div>`;
+    if (state.reply === 'waiting') return `<div class="row note note-warm" style="--g:14px;flex-wrap:nowrap"><span class="pulse" aria-hidden="true"></span><div class="stack" style="--g:2px"><span class="bold">Waiting for ${esc(who)} to confirm</span><span class="small muted">We texted ${g.shopId === 'rosa' ? 'her' : 'them'} at ${sentAt}. Sellers usually answer within 30 minutes; after 2 hours the request closes and nothing is charged.</span></div></div>`;
+    if (state.reply === 'counter') return `<div class="stack note note-warm" style="--g:12px;padding:16px"><span class="bold">${esc(who)} suggested a change</span><p style="font-size:15px;line-height:1.5">${g.shopId === 'rosa' ? '“Fully booked Saturday. I can have both jars ready <strong>Sunday 15 Dec, 10 am to 12 nn</strong>, same price.”' : '“I can have it ready <strong>one day later</strong>, same price.”'}</p><div class="row" style="--g:8px"><button type="button" class="btn btn-primary btn-sm" data-act="takeCounter" style="font-weight:700">Accept ${g.shopId === 'rosa' ? 'Sunday' : 'new date'}</button><button type="button" class="btn btn-outline btn-sm" data-act="refuseCounter">No thanks, remove item</button></div></div>`;
+    if (state.reply === 'accepted') return `<div class="row note note-green" style="--g:12px;flex-wrap:nowrap">${tick()}<div class="stack" style="--g:2px"><span class="bold">Accepted by ${esc(who)}</span><span class="small" style="color:#3F4A45">${g.how === 'pickup' ? 'Pickup' : 'Delivery'} ${state.counterTaken && g.shopId === 'rosa' ? 'Sun 15 Dec, 10 am to 12 nn' : esc(g.meta.date || 'on the date you asked for')}</span></div></div>`;
+    return `<div class="stack note note-grey" style="--g:6px"><span class="bold">${esc(who)} can’t take this order. Nothing was charged for it.</span><a href="index.html#featured" class="small bold">See similar shops</a></div>`;
+  }
+  function tick() { return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1F6B45" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M5 12l5 5 9-10"/></svg>'; }
+
+  function render() {
+    if (state.paid) {
+      root.innerHTML = `<section class="card stack" style="max-width:720px;margin:24px auto;border-radius:24px;padding:36px;--g:18px;text-align:center;align-items:center">
+        <span style="width:64px;height:64px;border-radius:999px;background:var(--green-bg);display:flex;align-items:center;justify-content:center"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1F6B45" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></span>
+        <h1 class="display" style="font-size:36px">Paid ${fmt(state.paidTotal)}. Salamat!</h1>
+        <p class="muted" style="font-size:16px;line-height:1.6;max-width:34em">Iskaparate is holding your payment. Each seller is paid after your order arrives and the 3-day return window passes. We sent the details by text and email.</p>
+        <a href="order.html" class="btn btn-primary" style="min-height:52px;font-weight:700">Track your order</a>
+        <button type="button" class="btn btn-quiet" data-act="restart">Prototype: start over with the sample cart</button>
+      </section>`;
+      return;
+    }
+    const answered = state.reply === 'accepted' || state.reply === 'declined';
+    let heading = 'Waiting for the seller';
+    if (state.reply === 'counter') heading = 'The seller suggested a change';
+    if (answered) heading = payable().length ? 'Ready to pay' : 'No items left to pay for';
+    const m = methods.find((x) => x.id === state.method);
+    const lines = payable().map((g) => g.lines.map((l) => `<div class="row between" style="--g:12px"><span>${esc(l.name)} × ${l.qty}</span><span>${fmt(l.total)}</span></div>`).join('') +
+      (g.how === 'delivery' ? `<div class="row between muted" style="--g:12px"><span>Courier from ${esc(g.shop.name)}, 3 to 5 days</span><span>${fmt(g.shipping)}</span></div>` : `<div class="row between muted" style="--g:12px"><span>${esc(g.shop.pickup)}</span><span>Free</span></div>`)).join('');
+
+    root.innerHTML = `
+      <div class="stack" style="--g:8px"><h1 class="h1">${heading}</h1><p class="muted">Request #4821 · sent ${sentDay}, ${sentAt}</p></div>
+      <div class="split">
+        <div class="main stack" style="--g:16px">
+          <section aria-label="Seller answers" class="panel">
+            ${groups.map((g, i) => `<div class="stack" style="padding:20px;--g:12px;${i < groups.length - 1 ? 'border-bottom:1px solid var(--line-2)' : ''}">
+              <div class="row between baseline" style="--g:8px 16px"><span class="bold" style="font-size:17px">${esc(g.shop.name)}</span><span class="small muted">${g.lines.map((l) => esc(l.name) + ' × ' + l.qty).join(', ')} · ${g.how === 'pickup' ? 'pickup' : 'courier delivery'}</span></div>
+              ${statusBlock(g)}
+            </div>`).join('')}
+          </section>
+          ${confirmGroups.length ? `<section aria-label="Prototype controls" class="proto stack">
+            <span class="proto-label">Prototype only: act out the seller’s reply</span>
+            <div class="row" style="--g:8px">
+              <button type="button" class="chip chip-md" data-act="simAccept">Seller accepts</button>
+              <button type="button" class="chip chip-md" data-act="simCounter">Seller suggests another day</button>
+              <button type="button" class="chip chip-md" data-act="simDecline">Seller declines or doesn’t answer</button>
+              <button type="button" class="btn btn-quiet" data-act="simReset">Start over</button>
+            </div>
+            <a href="seller-request.html" class="small bold">See what the seller sees on their phone</a>
+          </section>` : ''}
+        </div>
+        <aside aria-label="Payment" class="side card stack" style="--g:16px;border-radius:18px;flex-basis:340px">
+          <h2 style="font-size:20px">Payment</h2>
+          <div class="stack" style="--g:10px;font-size:15px">
+            ${lines}
+            <div class="row between bold" style="padding-top:12px;border-top:1px solid var(--line-2);font-size:19px"><span>Total</span><span>${fmt(total())}</span></div>
+          </div>
+          ${!answered ? '<div class="note note-grey small muted" style="line-height:1.5;border-radius:12px">Payment opens when every seller has answered. Nothing is charged before then.</div>' : payable().length ? `
+            <fieldset class="stack" style="--g:8px"><legend>Pay with</legend>
+              ${methods.map((x) => `<button type="button" class="option option-row" data-method="${x.id}" aria-pressed="${x.id === state.method}"><span style="font-weight:${x.id === state.method ? 700 : 600}">${x.label}</span><span class="xs muted">${x.note}</span></button>`).join('')}
+            </fieldset>
+            <button type="button" class="btn btn-primary btn-lg" data-act="pay">Pay ${fmt(total())} with ${m.label}</button>
+            <p class="xs muted" style="line-height:1.5">You finish paying on the payment provider’s secure page. Iskaparate never sees your card or bank details.</p>` :
+            '<div class="note note-grey small muted">Nothing will be charged. <a href="index.html#featured">Keep shopping</a></div>'}
+        </aside>
+      </div>`;
+  }
+
+  root.addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.method) { state.method = b.dataset.method; return render(); }
+    const act = b.dataset.act;
+    if (act === 'simAccept') Object.assign(state, { reply: 'accepted', counterTaken: false });
+    if (act === 'simCounter') state.reply = 'counter';
+    if (act === 'simDecline' || act === 'refuseCounter') state.reply = 'declined';
+    if (act === 'takeCounter') Object.assign(state, { reply: 'accepted', counterTaken: true });
+    if (act === 'simReset') Object.assign(state, { reply: confirmGroups.length ? 'waiting' : 'accepted', counterTaken: false, method: 'gcash' });
+    if (act === 'pay') {
+      const pay = payable();
+      state.paidTotal = total();
+      store.set('isk-last-order', {
+        id: '4821', total: state.paidTotal, method: methods.find((x) => x.id === state.method).label,
+        day: sentDay, time: sentAt, counterTaken: state.counterTaken,
+        groups: pay.map((g) => ({ shopId: g.shopId, name: g.shop.name, how: g.how, pickup: g.shop.pickup, date: g.meta.date || '', confirmFirst: g.confirmFirst, subtotal: g.subtotal, shipping: g.shipping, lines: g.lines.map((l) => ({ name: l.name, qty: l.qty, total: l.total })) }))
+      });
+      cart.clear();
+      store.set('isk-received', {});
+      state.paid = true;
+      window.scrollTo(0, 0);
+    }
+    if (act === 'restart') { cart.reset(); location.href = 'cart.html'; return; }
+    render();
+  });
+  render();
+})();
+</script>
+</body>
+</html>

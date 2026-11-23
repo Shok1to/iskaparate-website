@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Iskaparate.ph — Proud Filipino brands</title>
+<meta name="description" content="An online mall for proud Filipino brands. Order home-cooked food, crafts and services from checked sellers across Luzon, Visayas and Mindanao.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/css/styles.css">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+</head>
+<body data-page="home">
+<div id="site-header"></div>
+<main>
+
+<section class="container hero">
+  <div class="stack" style="--g:22px">
+    <p class="eyebrow" data-i18n="heroEyebrow">Online mall since 2020</p>
+    <h1 data-i18n="heroTitle">Proud Filipino brands, straight from the nanays who make them.</h1>
+    <p style="font-size:18px;line-height:1.55;color:var(--text-2);max-width:34em" data-i18n="heroLead">Every shop is checked by Iskaparate, and many are vouched for by their cooperative or foundation. Order home-cooked food, crafts and services from sellers across Luzon, Visayas and Mindanao.</p>
+    <div class="row">
+      <a href="#featured" class="btn btn-primary" data-i18n="startShopping">Start shopping</a>
+      <a href="sell.html" class="btn btn-outline" data-i18n="sell">Sell on Iskaparate</a>
+    </div>
+  </div>
+  <figure class="stack" style="margin:0">
+    <div class="shelf" aria-hidden="true">
+      <div class="shelf-row">
+        <div class="ph" style="height:92px"><img src="assets/img/ube.jpg" alt=""><span>Ube halaya</span></div>
+        <div class="ph" style="height:118px"><img src="assets/img/pastillas.jpg" alt=""><span>Pastillas</span></div>
+        <div class="ph" style="height:104px"><img src="assets/img/calamansi.jpg" alt=""><span>Calamansi</span></div>
+      </div>
+      <div class="shelf-board"></div>
+      <div class="shelf-row" style="border-radius:0">
+        <div class="ph" style="height:110px"><img src="assets/img/banig.jpg" alt=""><span>Banig</span></div>
+        <div class="ph" style="height:90px"><img src="assets/img/tote.jpg" alt=""><span>Abaca tote</span></div>
+        <div class="ph" style="height:120px"><img src="assets/img/mango.jpg" alt=""><span>Dried mangoes</span></div>
+      </div>
+      <div class="shelf-board"></div>
+      <div class="shelf-row">
+        <div class="ph" style="height:100px"><img src="assets/img/adobo.jpg" alt=""><span>Party tray</span></div>
+        <div class="ph" style="height:84px"><img src="assets/img/piaya.jpg" alt=""><span>Piaya</span></div>
+        <a href="sell.html" class="shelf-empty" tabindex="-1">Your products here</a>
+      </div>
+    </div>
+    <figcaption class="small" style="line-height:1.5;color:var(--text-3)">Iskaparate: the old word for an estante, the shelf where a shop shows its best.</figcaption>
+  </figure>
+</section>
+
+<section aria-label="Why shop here" class="container" style="padding-bottom:56px">
+  <div class="grid" style="--min:300px">
+    <div class="card feature">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1D2140" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg>
+      <div class="stack" style="--g:6px"><h2>Checked sellers</h2><p>Every seller passes a national ID check and shows BIR registration before taking orders.</p></div>
+    </div>
+    <div class="card feature">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1D2140" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><path d="M7 15h4"/></svg>
+      <div class="stack" style="--g:6px"><h2>Pay your way</h2><p>GCash, Maya, QR Ph, cards and online banking.</p></div>
+    </div>
+    <div class="card feature">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1D2140" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>
+      <div class="stack" style="--g:6px"><h2>Held until it arrives</h2><p>Your payment waits with Iskaparate until your order is delivered or picked up.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="categories" class="container sec stack" style="--g:24px">
+  <h2 class="h2" data-i18n="shopByCat">Shop by category</h2>
+  <div class="grid" style="--min:200px" id="cat-grid"></div>
+</section>
+
+<section id="featured" class="container sec stack" style="--g:24px">
+  <div class="row between" style="align-items:flex-end;--g:8px 24px">
+    <div class="stack" style="--g:8px">
+      <h2 class="h2" id="featured-title" data-i18n="fresh">Fresh this week</h2>
+      <p class="muted" id="featured-sub">Made-to-order items are confirmed by the seller before you pay.</p>
+    </div>
+    <a href="shop.html" style="font-weight:600" id="featured-link">See all shops</a>
+  </div>
+  <div class="grid" style="--g:20px" id="product-grid"></div>
+</section>
+
+<section class="container sec stack" style="--g:24px">
+  <div class="stack" style="--g:8px">
+    <h2 class="h2" data-i18n="bundles">Curated bundles</h2>
+    <p class="muted">Put together by Iskaparate from several shops, paid in one checkout.</p>
+  </div>
+  <div class="grid" style="--min:420px;--g:20px" id="bundle-grid"></div>
+</section>
+
+<section class="container" style="padding-bottom:72px">
+  <div class="card grid" style="--min:420px;--g:40px;align-items:center;border-radius:24px;padding:28px">
+    <div class="ph" style="min-height:340px;border-radius:16px;padding:14px"><img src="assets/img/seller.jpg" alt="A home cook at work in her kitchen" loading="lazy"></div>
+    <div class="stack" style="--g:16px">
+      <p class="eyebrow">Shop story</p>
+      <h2 class="h2">Aling Rosa has cooked for her barangay for twenty years.</h2>
+      <p class="lead">Now her ube halaya and party trays reach buyers across Metro Manila. She confirms every order herself, so it is made fresh for the day you need it.</p>
+      <div class="row" style="--g:8px">
+        <span class="pill">Verified seller</span>
+        <span class="pill pill-cream">Endorsed by [PARTNER COOPERATIVE]</span>
+      </div>
+      <a href="shop.html" class="btn btn-primary" style="align-self:flex-start">Visit Kusina ni Aling Rosa</a>
+    </div>
+  </div>
+</section>
+
+<section id="wholesale" class="dark-band">
+  <div class="container grid" style="--min:420px;--g:40px;align-items:center;padding-top:64px;padding-bottom:64px">
+    <div class="stack" style="--g:16px">
+      <p class="eyebrow">Wholesale</p>
+      <h2 class="display" style="font-size:38px;line-height:1.08">Buying for your sari-sari store, office or event?</h2>
+      <p class="lead">Approved resellers see wholesale prices and minimum order quantities, and can ask a seller for a quote on large orders.</p>
+      <a href="sell.html?role=wholesale" class="btn btn-gold" style="align-self:flex-start">Apply as a reseller</a>
+    </div>
+    <div class="stack" style="background:#fff;color:var(--navy);border-radius:18px;padding:22px;--g:14px">
+      <div class="row between baseline"><span class="bold" style="font-size:17px">Dried mangoes, 250 g</span><span class="small" style="color:var(--text-3)">Cebu Tamis Co-op</span></div>
+      <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">
+        <div class="tier"><span class="xs" style="color:var(--text-3)">1 to 23 packs</span><b>₱190</b></div>
+        <div class="tier"><span class="xs" style="color:var(--text-3)">24+ packs</span><b>₱165</b></div>
+        <div class="tier best"><span class="xs" style="color:var(--text-3)">96+ packs</span><b>₱150</b></div>
+      </div>
+      <p class="small" style="color:var(--text-3)">Minimum wholesale order: 24 packs. Free shipping set by the seller above ₱5,000.</p>
+    </div>
+  </div>
+</section>
+
+<section id="sell" class="container stack" style="padding-top:72px;padding-bottom:72px;--g:28px">
+  <div class="stack" style="--g:10px;max-width:640px">
+    <h2 class="display" style="font-size:40px;line-height:1.05">Magbenta sa Iskaparate</h2>
+    <p class="lead">Open your shop with just your mobile number. Verify only when you are ready to take orders.</p>
+  </div>
+  <ol class="steps grid" style="--min:300px">
+    <li class="card stack" style="--g:10px;border-radius:18px"><span class="step-num">1</span><span class="bold" style="font-size:18px">Sign up with your mobile number</span><span style="font-size:15px;line-height:1.5;color:var(--text-3)">Enter the code we text you and your workspace opens in about a minute.</span></li>
+    <li class="card stack" style="--g:10px;border-radius:18px"><span class="step-num">2</span><span class="bold" style="font-size:18px">Build your shop</span><span style="font-size:15px;line-height:1.5;color:var(--text-3)">Add your story, photos, products and pickup spots. The Iskaparate Academy shows you how.</span></li>
+    <li class="card stack" style="--g:10px;border-radius:18px"><span class="step-num">3</span><span class="bold" style="font-size:18px">Start selling when you are ready</span><span style="font-size:15px;line-height:1.5;color:var(--text-3)">Verify your national ID, BIR registration and payout account, and your shop goes live.</span></li>
+  </ol>
+  <div class="row" style="--g:12px 20px">
+    <a href="sell.html" class="btn btn-primary">Open your shop</a>
+    <a href="info.html#partners" style="font-weight:600">Partner organisations: invite your members</a>
+  </div>
+</section>
+
+</main>
+<div id="site-footer"></div>
+
+<script src="assets/js/site.js"></script>
+<script>
+(function () {
+  const { products, productCard, esc, fmt } = ISK;
+  const cats = [
+    { id: 'food', img: 'cat-food', name: 'Food and pasalubong', note: 'Home kitchens, sweets, preserves and party trays' },
+    { id: 'home', img: 'cat-home', name: 'Home and household', note: 'Linens, cleaning goods and kitchen supplies' },
+    { id: 'crafts', img: 'cat-crafts', name: 'Crafts and weaves', note: 'Banig, abaca, hablon and handmade gifts' },
+    { id: 'services', img: 'aircon', name: 'Services', note: 'Aircon cleaning, catering, alterations and more' },
+    { id: 'wholesale', img: 'cat-wholesale', name: 'Wholesale', note: 'Bulk prices for approved resellers', href: '#wholesale' }
+  ];
+  document.getElementById('cat-grid').innerHTML = cats.map((c) => `
+    <a href="${c.href || '?cat=' + c.id + '#featured'}" class="card stack" style="--g:12px;padding:14px;text-decoration:none">
+      <div class="ph" style="height:110px"><img src="assets/img/${c.img}.jpg" alt="" loading="lazy"></div>
+      <span style="font-weight:600;font-size:17px">${c.name}</span>
+      <span class="small" style="line-height:1.45;color:var(--text-3)">${c.note}</span>
+    </a>`).join('');
+
+  const params = new URLSearchParams(location.search);
+  const q = (params.get('q') || '').trim().toLowerCase();
+  const cat = params.get('cat');
+  let list = products.filter((p) => !p.bundle);
+  let filtered = false;
+  if (q) {
+    filtered = true;
+    list = list.filter((p) => [p.name, p.cardName, ISK.shops[p.shop].name, p.tag, p.desc, p.cat].join(' ').toLowerCase().includes(q));
+  } else if (cat) {
+    filtered = true;
+    list = list.filter((p) => p.cat === cat);
+  } else {
+    list = list.filter((p) => !p.hideHome);
+  }
+  const grid = document.getElementById('product-grid');
+  if (filtered) {
+    const label = q ? `Results for “${esc(params.get('q'))}”` : (cats.find((c) => c.id === cat) || {}).name || 'Products';
+    const t = document.getElementById('featured-title');
+    t.textContent = label; t.removeAttribute('data-i18n');
+    document.getElementById('featured-sub').textContent = list.length ? `${list.length} item${list.length === 1 ? '' : 's'} from checked sellers.` : 'Nothing matched yet. Try another word, like “ube” or “banig”.';
+    const l = document.getElementById('featured-link'); l.textContent = 'Clear search'; l.href = 'index.html#featured';
+  }
+  grid.innerHTML = list.map((p) => productCard(p)).join('');
+
+  document.getElementById('bundle-grid').innerHTML = products.filter((p) => p.bundle).map((b) => `
+    <a href="product.html?id=${b.id}" class="pcard grid" style="--min:180px;--g:18px;border-radius:18px;padding:16px">
+      <div class="ph" style="min-height:170px;border-radius:12px"><img src="${b.img}" alt="${esc(b.name)}" loading="lazy"></div>
+      <div class="stack" style="--g:8px;justify-content:center">
+        <span class="xs bold" style="color:var(--brown)">${esc(b.from)}</span>
+        <span class="display" style="font-weight:700;font-size:22px;line-height:1.15">${esc(b.name)}</span>
+        <span style="font-size:15px;line-height:1.45;color:var(--text-3)">${esc(b.items)}</span>
+        <span class="bold" style="font-size:18px">${fmt(b.price)}</span>
+      </div>
+    </a>`).join('');
+})();
+</script>
+</body>
+</html>

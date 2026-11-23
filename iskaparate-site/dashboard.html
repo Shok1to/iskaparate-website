@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seller workspace — Iskaparate.ph</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/css/styles.css">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+</head>
+<body class="ws" data-page="dashboard">
+<header class="ws-header">
+  <div class="container">
+    <div class="row" style="--g:14px">
+      <a href="index.html" class="brand-word" style="font-size:22px;text-decoration:none;color:#fff">iskaparate<span style="color:var(--gold-soft)">.ph</span></a>
+      <span class="small" style="color:#C9CBDC;border-left:1px solid #4A4F78;padding-left:14px">Seller workspace</span>
+    </div>
+    <div class="row small" style="--g:16px">
+      <a href="shop.html" style="font-weight:600">View my shop</a>
+      <span style="width:36px;height:36px;border-radius:999px;background:var(--gold);color:var(--navy);display:flex;align-items:center;justify-content:center;font-weight:800" aria-label="Signed in as Rosa">KR</span>
+    </div>
+  </div>
+</header>
+
+<div class="ws-wrap">
+  <nav aria-label="Workspace" class="ws-nav">
+    <a href="#top" aria-current="page">Today</a>
+    <a href="#requests">Order requests <span class="badge" id="open-count">2</span></a>
+    <a href="#pickups">Orders and pickups</a>
+    <a href="#make">Listings and stock</a>
+    <a href="#" data-soon>Shipping</a>
+    <a href="#wallet">Wallet and payouts</a>
+    <a href="#" data-soon>Shop profile</a>
+    <a href="#" data-soon>Team and store minder</a>
+    <a href="info.html#academy">Iskaparate Academy</a>
+  </nav>
+
+  <main class="ws-main" id="top">
+    <div class="row between baseline" style="--g:8px 24px">
+      <h1 class="display" style="font-size:36px" id="greeting">Magandang umaga, Rosa</h1>
+      <span style="font-size:15px" class="muted" id="today"></span>
+    </div>
+
+    <section id="requests" aria-label="Order requests" class="card stack" style="border-radius:18px;padding:20px;--g:14px">
+      <div class="row between baseline" style="--g:6px 16px">
+        <h2 class="h3">Order requests waiting for you</h2>
+        <span class="small muted">Buyers pay only after you accept</span>
+      </div>
+      <div class="stack" style="--g:14px" id="request-list"></div>
+    </section>
+
+    <div class="grid" style="--min:320px;--g:20px">
+      <section id="make" aria-label="To make this week" class="card stack" style="border-radius:18px;padding:20px">
+        <h2 class="h3">To make this week</h2>
+        <ul class="list">
+          <li><span>Ube halaya, 500 g</span><span class="bold">8 jars by Fri</span></li>
+          <li><span>Leche flan</span><span class="bold">4 llaneras by Thu</span></li>
+          <li><span>Chicken adobo party tray</span><span class="bold" id="tray-count">1 tray by Sun</span></li>
+        </ul>
+      </section>
+      <section id="pickups" aria-label="Pickups" class="card stack" style="border-radius:18px;padding:20px">
+        <h2 class="h3">Pickups on Saturday 14 Dec</h2>
+        <ul class="list" id="pickup-list">
+          <li data-code="482913"><span>2 to 4 pm · Mika D. · #4821</span><span class="bold">2 jars</span></li>
+          <li data-code="771204"><span>4 to 6 pm · Paolo G. · #4828</span><span class="bold">3 jars</span></li>
+        </ul>
+        <form class="stack" style="--g:8px" id="scan-form" hidden>
+          <label for="scan-code" class="bold small">Type the buyer’s 6-digit pickup code</label>
+          <div class="row" style="--g:8px;flex-wrap:nowrap"><input id="scan-code" class="input" inputmode="numeric" maxlength="7" placeholder="482 913"><button class="btn btn-primary btn-sm" type="submit">Release</button></div>
+          <span class="xs muted">Prototype: try 482 913 (Mika) or 771 204 (Paolo).</span>
+        </form>
+        <button type="button" class="btn btn-primary" id="scan-btn" style="font-weight:700"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 8V5a1 1 0 011-1h3M16 4h3a1 1 0 011 1v3M20 16v3a1 1 0 01-1 1h-3M8 20H5a1 1 0 01-1-1v-3M4 12h16"/></svg>Scan a pickup QR code</button>
+      </section>
+    </div>
+
+    <section id="wallet" aria-label="Wallet" class="card stack" style="border-radius:18px;padding:20px;--g:16px">
+      <div class="row between baseline" style="--g:6px 16px">
+        <h2 class="h3">Wallet</h2>
+        <span class="small muted">Next payout Fri 13 Dec to GCash ending 4417</span>
+      </div>
+      <div class="grid" style="--min:170px;--g:12px">
+        <div class="stat"><span class="xs muted">Advances received</span><b>₱972</b><span style="font-size:12px" class="muted">30% of made-to-order orders, once paid</span></div>
+        <div class="stat"><span class="xs muted">Waiting for pickup or delivery</span><b id="w-waiting">₱2,268</b><span style="font-size:12px" class="muted">Held by Iskaparate</span></div>
+        <div class="stat"><span class="xs muted">In 3-day return window</span><b id="w-window">₱1,180</b><span style="font-size:12px" class="muted">Released if no problem is reported</span></div>
+        <div class="stat" style="background:var(--cream)"><span class="xs muted">Ready to pay out</span><b>₱6,420</b><span style="font-size:12px" class="muted">After [COMMISSION %] commission</span></div>
+      </div>
+      <p class="small muted" style="line-height:1.5">Withholding tax: not applied. Your BIR-received sworn declaration (₱500,000 or less a year) is on file. <a href="#" style="font-weight:600" data-soon>Download certificates</a></p>
+    </section>
+
+    <section aria-label="Shop health" class="card stack" style="border-radius:18px;padding:20px">
+      <h2 class="h3">Shop health</h2>
+      <div class="grid" style="--min:240px;--g:10px">
+        <div class="health" style="background:var(--green-bg)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F6B45" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>National ID check passed</div>
+        <div class="health" style="background:var(--green-bg)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F6B45" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>BIR certificate approved</div>
+        <div class="health" style="background:var(--green-bg)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F6B45" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>Payout account live (GCash)</div>
+        <div class="health" style="background:var(--cream)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8A5A00" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/></svg>Food permit expires in 21 days</div>
+      </div>
+      <p class="small muted">Busy this month? <a href="info.html#store-minder" style="font-weight:600">Ask an Iskaparate store minder to run your shop.</a></p>
+    </section>
+  </main>
+</div>
+
+<script src="assets/js/site.js"></script>
+<script>
+(function () {
+  const { store, toast, esc } = ISK;
+  const user = store.get('isk-user', null);
+  const first = user && user.role === 'sell' && user.name ? user.name.split(' ')[0] : 'Rosa';
+  const h = new Date().getHours();
+  const greet = h < 12 ? 'Magandang umaga' : h < 18 ? 'Magandang hapon' : 'Magandang gabi';
+  document.getElementById('greeting').textContent = `${greet}, ${first}`;
+  document.getElementById('today').textContent = new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
+
+  const defs = [
+    { key: 'r1', id: '4836', buyer: 'Jun R.', items: 'Chicken adobo party tray × 1', when: 'needed Sun 15 Dec, 11 am', how: 'Delivery', total: '₱1,450', mins: 102 },
+    { key: 'r2', id: '4839', buyer: 'Ana P.', items: 'Ube halaya, 1 kg tub × 3', when: 'needed Fri 13 Dec', how: 'Pickup in Cubao', total: '₱1,560', mins: 118 }
+  ];
+  const status = store.get('isk-ws-requests', { r1: 'open', r2: 'open' });
+  const left = (m) => `${Math.floor(m / 60)} h ${String(m % 60).padStart(2, '0')} min`;
+
+  function render() {
+    const open = defs.filter((d) => status[d.key] === 'open').length;
+    document.getElementById('open-count').textContent = open;
+    document.getElementById('open-count').hidden = open === 0;
+    document.getElementById('tray-count').textContent = status.r1 === 'accepted' ? '2 trays by Sun' : '1 tray by Sun';
+    document.getElementById('request-list').innerHTML = defs.map((d) => `
+      <article class="row" style="border:1px solid var(--line);border-radius:14px;padding:16px;--g:14px 20px">
+        <div class="stack" style="flex:1 1 280px;--g:4px">
+          <span class="bold" style="font-size:16px">${esc(d.items)}</span>
+          <span class="small muted">#${d.id} · ${esc(d.buyer)} · ${esc(d.when)} · ${esc(d.how)}</span>
+          <span class="bold">${d.total}</span>
+        </div>
+        ${status[d.key] === 'open' ? `
+        <div class="stack" style="--g:8px;align-items:flex-end">
+          <span class="xs bold" style="color:var(--brown)"><span data-left="${d.key}">${left(d.mins)}</span> left to answer</span>
+          <div class="row" style="--g:8px;justify-content:flex-end">
+            <button type="button" class="btn btn-primary btn-sm" style="font-weight:700" data-accept="${d.key}">Accept</button>
+            <a href="seller-request.html" class="btn btn-outline btn-sm">Suggest a change</a>
+            <button type="button" class="btn btn-link" style="background:none" data-decline="${d.key}">Decline</button>
+          </div>
+        </div>` : status[d.key] === 'accepted'
+          ? '<span class="pill pill-green" style="font-size:14px;font-weight:700;padding:8px 14px;color:#1F4D36">Accepted · buyer asked to pay</span>'
+          : '<span class="pill" style="font-size:14px;font-weight:700;padding:8px 14px;background:#F1F1F4;color:#3F4357">Declined · buyer not charged</span>'}
+      </article>`).join('') +
+      (open === 0 ? '<button type="button" class="btn btn-quiet" style="align-self:flex-start" data-reset="1">Prototype: bring the requests back</button>' : '');
+  }
+  document.getElementById('request-list').addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.accept) { status[b.dataset.accept] = 'accepted'; toast('Accepted. The buyer has been asked to pay.'); }
+    if (b.dataset.decline) { status[b.dataset.decline] = 'declined'; toast('Declined. The buyer was not charged.'); }
+    if (b.dataset.reset) { status.r1 = 'open'; status.r2 = 'open'; }
+    store.set('isk-ws-requests', status); render();
+  });
+  // Count down the answer window once a minute
+  setInterval(() => { defs.forEach((d) => { d.mins = Math.max(0, d.mins - 1); const el = document.querySelector(`[data-left="${d.key}"]`); if (el) el.textContent = left(d.mins); }); }, 60000);
+  render();
+
+  // Pickup release by code (stands in for the QR scanner)
+  const scanBtn = document.getElementById('scan-btn'), form = document.getElementById('scan-form');
+  scanBtn.addEventListener('click', () => { form.hidden = !form.hidden; if (!form.hidden) document.getElementById('scan-code').focus(); });
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const code = document.getElementById('scan-code').value.replace(/\D/g, '');
+    const li = document.querySelector(`#pickup-list li[data-code="${code}"]`);
+    if (!li) { toast('That code doesn’t match a pickup today'); return; }
+    if (li.dataset.done) { toast('Already released'); return; }
+    li.dataset.done = '1';
+    li.lastElementChild.innerHTML = '<span class="pill pill-green">Picked up</span>';
+    document.getElementById('scan-code').value = '';
+    toast('Pickup confirmed. The 3-day return window has started.');
+  });
+
+  document.querySelectorAll('[data-soon]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); toast('This part of the workspace is coming in V1'); }));
+  // Highlight the nav item for the section in view
+  const navLinks = [...document.querySelectorAll('.ws-nav a[href^="#"]:not([data-soon])')];
+  navLinks.forEach((a) => a.addEventListener('click', () => { navLinks.forEach((x) => x.removeAttribute('aria-current')); a.setAttribute('aria-current', 'page'); }));
+})();
+</script>
+</body>
+</html>

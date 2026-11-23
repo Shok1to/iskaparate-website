@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Help and programmes — Iskaparate.ph</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/css/styles.css">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<style>
+  .info-wrap { display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start; padding-top: 32px; padding-bottom: 72px; }
+  .toc { flex: 1 1 220px; position: sticky; top: calc(var(--header-h, 80px) + 16px); }
+  .toc a { display: block; padding: 8px 12px; border-radius: 10px; text-decoration: none; font-weight: 500; }
+  .toc a:hover { background: var(--bg-2); }
+  .info-main { flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 20px; }
+  .info-main section { scroll-margin-top: calc(var(--header-h, 80px) + 16px); }
+  .info-main ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; line-height: 1.55; }
+  @media (max-width: 760px) { .toc { position: static; } }
+</style>
+</head>
+<body data-page="info">
+<div id="site-header"></div>
+<main class="container info-wrap">
+  <nav class="toc card" style="padding:10px" aria-label="On this page">
+    <a href="#payments">How payments are held</a>
+    <a href="#shipping">Shipping, pickup and returns</a>
+    <a href="#academy">Iskaparate Academy</a>
+    <a href="#partners">Partner organisations</a>
+    <a href="#affiliates">Affiliate program</a>
+    <a href="#store-minder">Store minder</a>
+    <a href="#privacy">Privacy notice</a>
+    <a href="#terms">Terms</a>
+  </nav>
+  <div class="info-main">
+    <h1 class="h1">Help and programmes</h1>
+
+    <section id="payments" class="card stack" style="--g:12px">
+      <h2 class="h3">How payments are held</h2>
+      <ul>
+        <li>Made-to-order, service and bulk orders are confirmed by the seller first. Nothing is charged until they say yes.</li>
+        <li>You pay with GCash, Maya, QR Ph, card or online banking on the payment provider’s secure page. Iskaparate never sees your card or bank details.</li>
+        <li>Your money waits with Iskaparate until your order is delivered, picked up (by QR scan) or the service is done.</li>
+        <li>If nothing is reported within 3 days, the seller is paid. Report a problem in that window and the payment stays on hold until Support decides.</li>
+        <li>For made-to-order items, 30% of the seller’s share may be released as soon as you pay so they can buy ingredients and materials.</li>
+      </ul>
+    </section>
+
+    <section id="shipping" class="card stack" style="--g:12px">
+      <h2 class="h3">Shipping, pickup and returns</h2>
+      <ul>
+        <li>Courier rates are quoted at checkout by weight, size and destination. Each seller chooses which couriers to offer.</li>
+        <li>Local pickup or meet-up uses a time window. Show your pickup QR code, or read out the 6-digit code if you have no signal.</li>
+        <li>If you cancel before the seller starts or ships, you get a full refund. If the seller cancels or misses the promised date, you get a full refund.</li>
+        <li>If you cancel a made-to-order item after the advance was paid, the seller keeps the advance and the rest is refunded.</li>
+      </ul>
+    </section>
+
+    <section id="academy" class="card stack" style="--g:12px">
+      <h2 class="h3">Iskaparate Academy</h2>
+      <p class="lead" style="font-size:16px">Courses, videos and guides in Filipino and English for sellers: product photos on a phone, pricing, packing, BIR registration and using the seller workspace. Join an onboarding seminar and our team can set up your shop with you.</p>
+      <a href="sell.html" class="btn btn-primary" style="align-self:flex-start">Open your shop</a>
+    </section>
+
+    <section id="partners" class="card stack" style="--g:12px">
+      <h2 class="h3">Partner organisations</h2>
+      <p class="lead" style="font-size:16px">Cooperatives, foundations and local government programmes get an invite link and code for their members. Partners endorse members’ applications, follow their onboarding and sales totals, and export a summary for their own programme reports.</p>
+      <p class="small muted">Contact the partnerships team: [PARTNERSHIPS EMAIL]</p>
+    </section>
+
+    <section id="affiliates" class="card stack" style="--g:12px">
+      <h2 class="h3">Affiliate program</h2>
+      <ul>
+        <li>Sign up with your mobile number, get approved and share tracked links to any shop, listing or bundle.</li>
+        <li>You earn commission on orders within 7 days of a click, once the order is released to the seller.</li>
+        <li>See clicks, orders, pending and paid commission in your dashboard. Payouts are monthly.</li>
+      </ul>
+      <a href="sell.html?role=buy" class="btn btn-outline" style="align-self:flex-start">Join as an affiliate</a>
+    </section>
+
+    <section id="store-minder" class="card stack" style="--g:12px">
+      <h2 class="h3">Store minder</h2>
+      <p class="lead" style="font-size:16px">Too busy to keep up? With your written consent, Iskaparate staff can manage your listings, order requests and messages. Every action is marked “by store minder”, they can never change your payout or tax details, and you can revoke access at any time.</p>
+    </section>
+
+    <section id="privacy" class="card stack" style="--g:12px">
+      <h2 class="h3">Privacy notice</h2>
+      <p class="note note-warm small"><strong>Draft placeholder.</strong> The final privacy notice must be written and reviewed by Iskaparate’s counsel under the Data Privacy Act before launch.</p>
+      <ul>
+        <li>We never store card numbers, bank account numbers, PhilSys numbers or ID images. Those stay with the payment provider and the ID-check service.</li>
+        <li>Sharing data with our partner Ascend Aegis to improve Iskaparate and train AI models is optional, asked separately at sign-up, and can be changed at any time.</li>
+      </ul>
+    </section>
+
+    <section id="terms" class="card stack" style="--g:12px">
+      <h2 class="h3">Terms</h2>
+      <p class="note note-warm small"><strong>Draft placeholder.</strong> Final terms to be supplied by Iskaparate.</p>
+      <p class="lead" style="font-size:16px">Iskaparate is a marketplace. It does not make or sell the goods: every listing is sold by an independent seller who has been checked by Iskaparate.</p>
+    </section>
+  </div>
+</main>
+<div id="site-footer"></div>
+<script src="assets/js/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kusina ni Aling Rosa — Iskaparate.ph</title>
+<meta name="description" content="Home kitchen in Cubao, Quezon City. Ube halaya, leche flan and party trays, made to order and confirmed before you pay.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/css/styles.css">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+</head>
+<body data-page="shops">
+<div id="site-header"></div>
+<main>
+<div class="container" style="padding-top:24px">
+  <div class="ph shop-banner"><img src="assets/img/banner.jpg" alt="A shared meal of rice and dishes on banana leaves"></div>
+</div>
+
+<section class="container row between" style="padding-bottom:28px;--g:20px 28px;align-items:flex-end">
+  <div class="row" style="--g:20px;align-items:flex-end">
+    <div class="avatar" aria-hidden="true">KR</div>
+    <div class="stack" style="--g:10px;padding-top:16px">
+      <h1 class="h1">Kusina ni Aling Rosa</h1>
+      <p style="font-size:15px" class="muted">Home kitchen · Cubao, Quezon City · Pickup or delivery in Metro Manila</p>
+      <div class="row" style="--g:8px">
+        <span class="pill">Verified seller</span>
+        <span class="pill pill-cream">Endorsed by [PARTNER COOPERATIVE]</span>
+        <span class="pill pill-green">Wholesale available</span>
+      </div>
+    </div>
+  </div>
+  <div class="stack start" style="--g:12px">
+    <div class="row small muted" style="--g:8px 20px">
+      <span><strong style="color:var(--navy)">4.9</strong> from 128 reviews</span>
+      <span>Usually answers within <strong style="color:var(--navy)">30 minutes</strong></span>
+    </div>
+    <div class="row" style="--g:10px">
+      <button type="button" class="btn btn-primary btn-sm" id="follow" aria-pressed="false">Follow shop</button>
+      <button type="button" class="btn btn-outline btn-sm" id="message">Message</button>
+    </div>
+  </div>
+</section>
+
+<nav class="tabs" aria-label="Shop sections">
+  <div class="container">
+    <a href="#products" class="on">Products</a>
+    <a href="#story">Story</a>
+    <a href="#pickup">Pickup and delivery</a>
+    <a href="#reviews">Reviews</a>
+  </div>
+</nav>
+
+<section id="products" class="container stack" style="padding-top:32px;padding-bottom:56px;--g:20px">
+  <div role="group" aria-label="Filter products" class="row" style="--g:8px" id="chips"></div>
+  <div class="grid" style="--g:20px" id="shop-grid"></div>
+</section>
+
+<section id="story" style="background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="container grid" style="--min:420px;--g:40px;align-items:center;padding-top:56px;padding-bottom:56px">
+    <div class="stack" style="--g:16px">
+      <p class="eyebrow">Her story</p>
+      <h2 class="display" style="font-size:32px;line-height:1.1">Cooking for the barangay, now for all of Metro Manila.</h2>
+      <p class="lead" style="line-height:1.65">Rosa started with ube halaya for neighbours' birthdays. Her cooperative helped her get her BIR registration and join Iskaparate, and the Academy taught her to photograph her jars on her phone.</p>
+      <p class="lead" style="line-height:1.65">She cooks to order, so she confirms each request before you pay. Party trays need two days' notice.</p>
+    </div>
+    <div class="ph" style="min-height:320px;border-radius:18px;padding:14px"><img src="assets/img/kitchen.jpg" alt="Cooking in a home kitchen" loading="lazy"></div>
+  </div>
+</section>
+
+<section id="pickup" class="container stack" style="padding-top:56px;padding-bottom:56px;--g:20px">
+  <h2 class="display" style="font-size:30px">Pickup and delivery</h2>
+  <div class="grid" style="--min:320px">
+    <div class="card stack" style="--g:8px">
+      <span class="bold" style="font-size:17px">Pickup in Cubao</span>
+      <span class="muted" style="font-size:15px;line-height:1.5">[PICKUP ADDRESS], Cubao, Quezon City</span>
+      <span class="muted" style="font-size:15px;line-height:1.5">Tuesday to Sunday, 9 am to 6 pm. Show your pickup QR code.</span>
+    </div>
+    <div class="card stack" style="--g:8px">
+      <span class="bold" style="font-size:17px">Delivery</span>
+      <span class="muted" style="font-size:15px;line-height:1.5">Same-day courier within Metro Manila. The fee is quoted at checkout.</span>
+      <span class="muted" style="font-size:15px;line-height:1.5">Wholesale orders above ₱5,000 ship free.</span>
+    </div>
+  </div>
+</section>
+
+<section id="reviews" class="container stack" style="padding-bottom:64px;--g:20px">
+  <div class="row baseline" style="--g:8px 16px">
+    <h2 class="display" style="font-size:30px">Reviews</h2>
+    <span class="small muted">Only buyers who received an order can review.</span>
+  </div>
+  <div class="grid" style="--min:320px" id="reviews-grid"></div>
+</section>
+</main>
+<div id="site-footer"></div>
+
+<script src="assets/js/site.js"></script>
+<script>
+(function () {
+  const { byId, productCard, fmt, esc, toast, ube1kg } = ISK;
+  const items = [
+    { p: byId('ube'), size: '500', name: 'Ube halaya, 500 g jar', note: 'Ready in 2 days', price: 280, tag: 'Made to order', kind: 'mto' },
+    { p: byId('ube'), ...ube1kg },
+    { p: byId('flan'), note: 'Ready in 1 day', tag: 'Made to order', kind: 'mto' },
+    { p: byId('adobo'), note: 'Serves 10 to 12 · 2 days notice', tag: 'Party tray', kind: 'tray' },
+    { p: byId('pancit'), note: 'Serves 10 to 12 · 2 days notice', tag: 'Party tray', kind: 'tray' },
+    { p: byId('ube-case'), note: 'For approved resellers', tag: 'Wholesale', kind: 'wholesale' }
+  ];
+  const chips = [{ id: 'all', label: 'All' }, { id: 'mto', label: 'Made to order' }, { id: 'tray', label: 'Party trays' }, { id: 'wholesale', label: 'Wholesale' }];
+  let filter = 'all';
+  function render() {
+    document.getElementById('chips').innerHTML = chips.map((c) => `<button type="button" class="chip" data-id="${c.id}" aria-pressed="${c.id === filter}">${c.label}</button>`).join('');
+    const vis = filter === 'all' ? items : items.filter((i) => i.kind === filter);
+    document.getElementById('shop-grid').innerHTML = vis.map((i) => productCard(i.p, { name: i.name || i.p.name, sub: i.note, tag: i.tag, price: fmt(i.price || i.p.price), size: i.size })).join('');
+  }
+  document.getElementById('chips').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { filter = b.dataset.id; render(); } });
+  render();
+
+  const reviews = [
+    { name: 'Mika D.', stars: '5 of 5', item: 'Ube halaya, 500 g jar', text: 'Picked up warm on Saturday. Rosa confirmed in ten minutes and the QR pickup took seconds.' },
+    { name: 'Jun R.', stars: '5 of 5', item: 'Chicken adobo party tray', text: 'Fed the whole office. She moved our date by a day and we agreed in the app before paying.' },
+    { name: 'Carla S.', stars: '4 of 5', item: 'Leche flan, 2 llaneras', text: 'Very good, a little sweet for us. Courier was on time.' }
+  ];
+  document.getElementById('reviews-grid').innerHTML = reviews.map((r) => `
+    <article class="card stack" style="--g:10px;padding:20px">
+      <div class="row between baseline"><span class="bold">${esc(r.name)}</span><span class="xs bold" style="color:var(--green)">Verified purchase</span></div>
+      <span class="small muted">${r.stars} · ${esc(r.item)}</span>
+      <p style="font-size:15px;line-height:1.55">${esc(r.text)}</p>
+    </article>`).join('');
+
+  const follow = document.getElementById('follow');
+  const followed = ISK.store.get('isk-follow-rosa', false);
+  const setFollow = (v) => { follow.setAttribute('aria-pressed', String(v)); follow.textContent = v ? 'Following' : 'Follow shop'; };
+  setFollow(followed);
+  follow.addEventListener('click', () => { const v = follow.getAttribute('aria-pressed') !== 'true'; ISK.store.set('isk-follow-rosa', v); setFollow(v); toast(v ? 'You follow Kusina ni Aling Rosa' : 'Unfollowed'); });
+  document.getElementById('message').addEventListener('click', () => toast('Sign in with your mobile number to message sellers'));
+
+  // Highlight the tab for the section in view
+  const tabs = [...document.querySelectorAll('.tabs a')];
+  const io = new IntersectionObserver((ents) => ents.forEach((en) => {
+    if (en.isIntersecting) tabs.forEach((t) => t.classList.toggle('on', t.getAttribute('href') === '#' + en.target.id));
+  }), { rootMargin: '-45% 0px -50% 0px' });
+  ['products', 'story', 'pickup', 'reviews'].forEach((id) => io.observe(document.getElementById(id)));
+})();
+</script>
+</body>
+</html>

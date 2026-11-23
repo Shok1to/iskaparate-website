@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your cart — Iskaparate.ph</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/css/styles.css">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+</head>
+<body data-page="cart">
+<div id="site-header"></div>
+<main class="container stack" style="padding-top:32px;padding-bottom:64px;--g:24px">
+  <h1 class="h1">Your cart</h1>
+
+  <div id="empty" class="card stack" style="--g:14px;align-items:flex-start;padding:32px" hidden>
+    <h2 class="h3">Your cart is empty</h2>
+    <p class="muted">Find home-cooked food, crafts and services from checked sellers.</p>
+    <div class="row"><a href="index.html#featured" class="btn btn-primary">Start shopping</a><button type="button" class="btn btn-quiet" id="restore">Prototype: restore sample cart</button></div>
+  </div>
+
+  <div class="split" id="filled">
+    <div class="main stack" style="--g:16px" id="groups"></div>
+
+    <aside aria-label="Order summary" class="side card stack" style="--g:16px;border-radius:18px">
+      <h2 style="font-size:20px">Summary</h2>
+      <div class="stack" style="--g:10px;font-size:15px">
+        <div class="row between"><span>Items</span><span style="font-weight:600" id="items-total"></span></div>
+        <div class="row between muted"><span>Delivery</span><span>Quoted when you pay</span></div>
+        <div class="row between bold" style="padding-top:12px;border-top:1px solid var(--line-2);font-size:18px"><span>So far</span><span id="so-far"></span></div>
+      </div>
+      <a href="checkout.html" class="btn btn-primary btn-block" style="min-height:54px;font-weight:700" id="go"></a>
+      <ol class="stack small muted" style="margin:0;padding:0 0 0 20px;--g:8px;line-height:1.5" id="how-it-works"></ol>
+      <p class="xs muted" id="leave-note">You can leave while you wait. We text you a link when the seller answers.</p>
+    </aside>
+  </div>
+</main>
+<div id="site-footer"></div>
+
+<script src="assets/js/site.js"></script>
+<script>
+(function () {
+  const { cart, fmt, esc } = ISK;
+  const groupsEl = document.getElementById('groups');
+
+  function render() {
+    const groups = cart.groups();
+    document.getElementById('empty').hidden = groups.length > 0;
+    document.getElementById('filled').hidden = groups.length === 0;
+    if (!groups.length) return;
+
+    groupsEl.innerHTML = groups.map((g) => {
+      const shopName = g.shopId === 'rosa' ? `<a href="shop.html" style="font-weight:700;font-size:17px;text-decoration:none">${esc(g.shop.name)}</a>` : `<span class="bold" style="font-size:17px">${esc(g.shop.name)}</span>`;
+      const badge = g.confirmFirst ? '<span class="pill pill-cream">Seller confirms first · made to order</span>' : '<span class="pill pill-green">In stock · ready to pay</span>';
+      const lines = g.lines.map((l) => `
+        <div class="row" style="padding:18px 20px;--g:16px">
+          <div class="ph" style="width:88px;height:88px;border-radius:12px;flex:none">${l.product.img ? `<img src="${l.product.img}" alt="">` : ''}</div>
+          <div class="stack" style="flex:1 1 200px;--g:4px">
+            <a href="product.html?id=${l.product.id}${l.size ? '&size=' + l.size : ''}" style="font-weight:600;font-size:16px;text-decoration:none">${esc(l.name)}</a>
+            <span class="small muted">${fmt(l.unit)} each · ${esc(l.product.lead)}</span>
+            <button type="button" class="btn-link small" style="align-self:flex-start;padding:0;min-height:28px;background:none;border:0;color:var(--text-2);cursor:pointer;text-decoration:underline" data-remove="${l.key}">Remove</button>
+          </div>
+          <div class="qty sm" role="group" aria-label="Quantity of ${esc(l.name)}">
+            <button type="button" aria-label="Fewer" data-less="${l.key}">−</button>
+            <span>${l.qty}</span>
+            <button type="button" aria-label="More" data-more="${l.key}">+</button>
+          </div>
+          <span style="min-width:80px;text-align:right;font-weight:700;font-size:17px">${fmt(l.total)}</span>
+        </div>`).join('');
+      let extra = '';
+      if (g.confirmFirst) {
+        const ways = g.canPickup ? [{ id: 'pickup', label: g.shop.pickup }, { id: 'delivery', label: 'Delivery' }] : null;
+        extra = `<div class="grid" style="--min:240px;--g:12px;padding:0 20px 20px">
+          ${ways ? `<fieldset><legend style="font-size:14px">How you get it</legend><div class="row" style="--g:8px">${ways.map((w) => `<button type="button" class="chip chip-md" data-shop="${g.shopId}" data-how="${w.id}" aria-pressed="${w.id === g.how}">${w.label}</button>`).join('')}</div></fieldset>` : ''}
+          <div class="field"><label for="date-${g.shopId}" style="font-size:14px">Needed by</label><input id="date-${g.shopId}" class="input" style="min-height:44px;border-radius:10px" data-meta="date" data-shop="${g.shopId}" placeholder="Sat 14 Dec, 2 to 4 pm" value="${esc(g.meta.date || '')}"></div>
+          <div class="field" style="grid-column:1/-1"><label for="notes-${g.shopId}" style="font-size:14px">Notes for ${esc(g.shopId === 'rosa' ? 'Aling Rosa' : 'the seller')} (optional)</label><textarea id="notes-${g.shopId}" rows="2" class="input" style="border-radius:10px" data-meta="notes" data-shop="${g.shopId}" placeholder="Less sweet if possible, for a birthday">${esc(g.meta.notes || '')}</textarea></div>
+        </div>`;
+      } else {
+        extra = `<div class="small muted" style="padding:0 20px 20px">Delivery by courier${g.shop.area ? ' from ' + esc(g.shop.area) : ''}, 3 to 5 days. The fee is quoted when you pay.</div>`;
+      }
+      return `<section class="panel" aria-label="${esc(g.shop.name)}"><div class="panel-head">${shopName}${badge}</div>${lines}${extra}</section>`;
+    }).join('');
+
+    const total = groups.reduce((n, g) => n + g.subtotal, 0);
+    document.getElementById('items-total').textContent = fmt(total);
+    document.getElementById('so-far').textContent = fmt(total);
+    const confirm = groups.filter((g) => g.confirmFirst);
+    document.getElementById('go').textContent = confirm.length ? 'Send request to sellers' : 'Continue to payment';
+    const who = confirm.length === 1 ? (confirm[0].shopId === 'rosa' ? 'Aling Rosa' : confirm[0].shop.name) : 'Each made-to-order seller';
+    const steps = confirm.length
+      ? [`${who} gets a text and confirms. ${confirm.length === 1 && confirm[0].shopId === 'rosa' ? 'She usually answers' : 'Sellers usually answer'} within 30 minutes.`,
+         `You then pay for ${groups.length > 1 ? (groups.length === 2 ? 'both shops' : 'all shops') : 'your order'} in one checkout.`,
+         'Iskaparate holds your payment until each order arrives.']
+      : ['You pay in one checkout with GCash, Maya, QR Ph, card or online banking.', 'Iskaparate holds your payment until each order arrives.'];
+    document.getElementById('how-it-works').innerHTML = steps.map((s) => `<li>${esc(s)}</li>`).join('');
+    document.getElementById('leave-note').hidden = !confirm.length;
+  }
+
+  groupsEl.addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    const line = (k) => cart.lines().find((l) => l.key === k);
+    if (b.dataset.less) { const l = line(b.dataset.less); if (l.qty <= 1) cart.remove(l.key); else cart.setQty(l.key, l.qty - 1); render(); }
+    else if (b.dataset.more) { const l = line(b.dataset.more); cart.setQty(l.key, Math.min(24, l.qty + 1)); render(); }
+    else if (b.dataset.remove) { cart.remove(b.dataset.remove); ISK.toast('Removed from cart'); render(); }
+    else if (b.dataset.how) { cart.setShopMeta(b.dataset.shop, { how: b.dataset.how }); render(); }
+  });
+  groupsEl.addEventListener('input', (e) => { const el = e.target; if (el.dataset.meta) cart.setShopMeta(el.dataset.shop, { [el.dataset.meta]: el.value }); });
+  document.getElementById('restore').addEventListener('click', () => { cart.reset(); render(); });
+  render();
+})();
+</script>
+</body>
+</html>

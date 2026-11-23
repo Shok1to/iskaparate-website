@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Product — Iskaparate.ph</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/css/styles.css">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+</head>
+<body data-page="product">
+<div id="site-header"></div>
+<main class="container stack" style="padding-top:20px;padding-bottom:64px;--g:24px">
+  <nav aria-label="Breadcrumb" class="row small muted" style="--g:8px" id="crumbs"></nav>
+
+  <div class="grid" style="--min:460px;--g:40px;align-items:start">
+    <div class="stack">
+      <div class="ph" style="aspect-ratio:1/1;border-radius:22px;padding:14px"><img id="main-photo" alt=""></div>
+    </div>
+
+    <div class="stack" style="--g:22px">
+      <div class="stack" style="--g:10px">
+        <span class="pill pill-cream" style="align-self:flex-start" id="badge"></span>
+        <h1 class="h1" id="name"></h1>
+        <a href="shop.html" style="font-size:15px;font-weight:600" id="shop-link"></a>
+        <span class="display" style="font-size:32px" id="unit-price"></span>
+      </div>
+
+      <fieldset id="size-set" hidden>
+        <legend>Size</legend>
+        <div class="row" style="--g:8px" id="sizes"></div>
+      </fieldset>
+
+      <div class="row" style="--g:20px;align-items:flex-end">
+        <div class="stack" style="--g:10px">
+          <span id="qty-label" class="bold" style="font-size:15px">Quantity</span>
+          <div class="qty" role="group" aria-labelledby="qty-label">
+            <button type="button" aria-label="Fewer" id="less">−</button>
+            <span aria-live="polite" id="qty">1</span>
+            <button type="button" aria-label="More" id="more">+</button>
+          </div>
+        </div>
+        <div class="field" style="flex:1 1 200px" id="date-field">
+          <label for="needed-by" id="date-label">Needed by</label>
+          <input id="needed-by" type="date" class="input">
+        </div>
+      </div>
+
+      <fieldset id="how-set" hidden>
+        <legend>How you get it</legend>
+        <div class="grid" style="--min:200px;--g:10px" id="how"></div>
+      </fieldset>
+
+      <div class="stack" style="--g:10px">
+        <button type="button" class="btn btn-primary btn-lg btn-block" id="add">Add to cart</button>
+        <p class="small muted" style="line-height:1.5" id="confirm-note"></p>
+      </div>
+
+      <div class="card feature" style="padding:18px;gap:14px">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1D2140" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>
+        <div class="stack" style="--g:4px"><span class="bold" id="held-title">Your payment is held until it arrives</span><span class="small muted" style="line-height:1.5" id="held-text"></span></div>
+      </div>
+
+      <div class="row between note note-warm" style="--g:8px 16px;border-radius:16px" id="resale" hidden>
+        <span class="small" style="line-height:1.5" id="resale-text"></span>
+        <a href="sell.html?role=wholesale" class="small bold">Apply as a reseller</a>
+      </div>
+    </div>
+  </div>
+
+  <section class="grid" style="--min:320px;margin-top:16px" id="details"></section>
+</main>
+<div id="site-footer"></div>
+
+<script src="assets/js/site.js"></script>
+<script>
+(function () {
+  const { byId, shops, fmt, esc, cart, toast } = ISK;
+  const params = new URLSearchParams(location.search);
+  const p = byId(params.get('id')) || byId('ube');
+  const shop = shops[p.shop];
+  const catNames = { food: 'Food and pasalubong', crafts: 'Crafts and weaves', services: 'Services', wholesale: 'Wholesale', bundle: 'Curated bundles', home: 'Home and household' };
+  const state = {
+    size: p.sizes ? (params.get('size') && p.sizes.some((s) => s.id === params.get('size')) ? params.get('size') : p.defaultSize) : null,
+    qty: p.id === 'ube' ? 2 : 1,
+    how: shop.pickup ? 'pickup' : 'delivery'
+  };
+  const sellerFirst = shop.name.replace(/^Kusina ni /, '');
+  document.title = p.name + ' — ' + shop.name + ' — Iskaparate.ph';
+
+  document.getElementById('crumbs').innerHTML =
+    `<a href="index.html">Home</a><span aria-hidden="true">/</span><a href="index.html?cat=${p.cat}#featured">${catNames[p.cat] || 'Products'}</a><span aria-hidden="true">/</span>` +
+    (p.shop === 'rosa' ? `<a href="shop.html">${esc(shop.name)}</a>` : `<span>${esc(shop.name)}</span>`);
+  document.getElementById('name').textContent = p.name;
+  const sl = document.getElementById('shop-link');
+  sl.textContent = shop.name + (p.shop === 'rosa' ? ' · 4.9 from 128 reviews' : '');
+  if (p.shop !== 'rosa') { sl.removeAttribute('href'); sl.style.color = 'var(--text-2)'; }
+  document.getElementById('badge').textContent = p.type === 'mto' ? 'Made to order · ' + p.lead : p.type === 'service' ? 'Service · ' + p.lead : p.bundle ? 'Curated bundle · ' + p.lead : 'In stock · ' + p.lead;
+
+  const mainPhoto = document.getElementById('main-photo');
+  if (p.img) { mainPhoto.src = p.img; mainPhoto.alt = p.name; } else mainPhoto.remove();
+
+  const confirmFirst = p.type !== 'stock';
+  document.getElementById('confirm-note').textContent = confirmFirst
+    ? `${shop.name} confirms they can make it before you pay. Nothing is charged until they accept.`
+    : 'In stock: you can pay as soon as you check out.';
+  if (p.shop === 'rosa') document.getElementById('confirm-note').textContent = 'Aling Rosa confirms she can make it before you pay. Nothing is charged until she accepts.';
+
+  if (p.type === 'service') document.getElementById('date-label').textContent = 'Preferred date';
+  if (p.type === 'stock') document.getElementById('date-field').hidden = true;
+  const dateInput = document.getElementById('needed-by');
+  const min = new Date(Date.now() + 86400000).toISOString().slice(0, 10);
+  dateInput.min = min;
+
+  if (p.resale) { document.getElementById('resale').hidden = false; document.getElementById('resale-text').innerHTML = 'Buying for resale? ' + p.resale; }
+
+  const details = [`<div class="card stack" style="--g:10px"><h2 style="font-size:18px">About this item</h2><p style="font-size:15px;line-height:1.6" class="muted">${esc(p.desc)}</p></div>`];
+  if (p.ingredients) details.push(`<div class="card stack" style="--g:10px"><h2 style="font-size:18px">Ingredients and allergens</h2><p style="font-size:15px;line-height:1.6" class="muted">${esc(p.ingredients)}</p><p style="font-size:15px;font-weight:600">${esc(p.allergens)}</p></div>`);
+  details.push(`<div class="card stack" style="--g:10px"><h2 style="font-size:18px">Sold by</h2><p style="font-size:15px;line-height:1.6" class="muted">${esc(shop.name)}, an independent seller checked by Iskaparate. Iskaparate is the marketplace, not the seller.</p>${p.shop === 'rosa' ? '<a href="shop.html" style="font-weight:600;font-size:15px">Visit the shop</a>' : ''}</div>`);
+  document.getElementById('details').innerHTML = details.join('');
+
+  function unit() { return p.sizes ? p.sizes.find((s) => s.id === state.size).price : p.price; }
+  function render() {
+    document.getElementById('unit-price').textContent = (p.priceText && !p.sizes) ? p.priceText : fmt(unit());
+    document.getElementById('qty').textContent = state.qty;
+    document.getElementById('add').textContent = 'Add to cart · ' + fmt(unit() * state.qty);
+    if (p.sizes) {
+      document.getElementById('size-set').hidden = false;
+      document.getElementById('sizes').innerHTML = p.sizes.map((s) => `<button type="button" class="chip chip-sq" data-id="${s.id}" aria-pressed="${s.id === state.size}">${s.label} · ${fmt(s.price)}</button>`).join('');
+    }
+    const ways = shop.pickup
+      ? [{ id: 'pickup', label: shop.pickup, note: 'Free · show your QR code' }, { id: 'delivery', label: 'Delivery', note: 'Courier fee quoted at checkout' }]
+      : null;
+    if (ways) {
+      document.getElementById('how-set').hidden = false;
+      document.getElementById('how').innerHTML = ways.map((w) => `<button type="button" class="option" data-id="${w.id}" aria-pressed="${w.id === state.how}"><span class="bold">${w.label}</span><span class="small muted">${w.note}</span></button>`).join('');
+    }
+    const pickup = state.how === 'pickup';
+    document.getElementById('held-title').textContent = p.type === 'service' ? 'Your payment is held until the job is done' : pickup ? 'Your payment is held until pickup' : 'Your payment is held until delivery';
+    document.getElementById('held-text').textContent = p.type === 'service'
+      ? 'Iskaparate keeps it until you confirm the visit, then releases it to the seller after 3 days if there is no problem.'
+      : `Iskaparate keeps it until you ${pickup ? 'pick up' : 'receive'} your order, then releases it to the seller after 3 days if there is no problem.`;
+  }
+  document.getElementById('sizes').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { state.size = b.dataset.id; render(); } });
+  document.getElementById('how').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { state.how = b.dataset.id; render(); } });
+  document.getElementById('less').addEventListener('click', () => { state.qty = Math.max(1, state.qty - 1); render(); });
+  document.getElementById('more').addEventListener('click', () => { state.qty = Math.min(24, state.qty + 1); render(); });
+  document.getElementById('add').addEventListener('click', () => {
+    cart.add(p.id, state.qty, state.size);
+    const meta = { how: state.how };
+    if (dateInput.value) meta.date = new Date(dateInput.value + 'T00:00').toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+    cart.setShopMeta(p.shop, meta);
+    toast('Added to cart');
+    setTimeout(() => { location.href = 'cart.html'; }, 600);
+  });
+  render();
+})();
+</script>
+</body>
+</html>

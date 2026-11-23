@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sell on Iskaparate — Open your shop</title>
+<meta name="description" content="Open your Iskaparate shop with just your mobile number. Verify only when you are ready to take orders.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/css/styles.css">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+</head>
+<body data-page="sell">
+<div id="site-header"></div>
+<main class="container grid" style="--min:440px;--g:40px;align-items:start;padding-top:40px;padding-bottom:72px">
+
+<section class="stack dark-band" style="border-radius:24px;padding:36px;--g:22px">
+  <p class="eyebrow">Magbenta sa Iskaparate</p>
+  <h1 class="display" style="font-size:44px;line-height:1.04">Open your shop with just your mobile number.</h1>
+  <ul class="stack" style="margin:0;padding:0;list-style:none;--g:14px;font-size:16px;line-height:1.5;color:#E3E4EF">
+    <li class="row" style="--g:12px;flex-wrap:nowrap;align-items:flex-start"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F0A81C" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none;margin-top:1px"><path d="M5 12l5 5 9-10"/></svg><span>Start in about a minute: we text you a code, and your workspace opens.</span></li>
+    <li class="row" style="--g:12px;flex-wrap:nowrap;align-items:flex-start"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F0A81C" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none;margin-top:1px"><path d="M5 12l5 5 9-10"/></svg><span>Build your shop, story and products at your own pace.</span></li>
+    <li class="row" style="--g:12px;flex-wrap:nowrap;align-items:flex-start"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F0A81C" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none;margin-top:1px"><path d="M5 12l5 5 9-10"/></svg><span>When you are ready to take orders, verify your national ID, BIR registration and payout account.</span></li>
+    <li class="row" style="--g:12px;flex-wrap:nowrap;align-items:flex-start"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F0A81C" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none;margin-top:1px"><path d="M5 12l5 5 9-10"/></svg><span>Learn with the Iskaparate Academy, or ask your cooperative to help you set up.</span></li>
+  </ul>
+  <p class="small" style="color:#C9CBDC">Already selling? <a href="dashboard.html" style="color:#fff;font-weight:600">Sign in</a></p>
+</section>
+
+<section aria-label="Sign up" class="card stack" style="border-radius:24px;padding:32px;--g:20px" id="flow">
+
+  <form class="stack" style="--g:20px" data-step="phone" novalidate>
+    <span class="small muted" style="font-weight:600">Step 1 of 3</span>
+    <h2 class="display" style="font-size:26px;font-weight:700">What’s your mobile number?</h2>
+    <div class="field">
+      <label for="phone">Mobile number</label>
+      <div class="row" style="--g:8px;flex-wrap:nowrap">
+        <span style="display:flex;align-items:center;min-height:52px;padding:0 14px;border:1.5px solid var(--input);border-radius:12px;background:var(--bg-2);font-weight:600">+63</span>
+        <input id="phone" class="input" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="917 123 4567" style="font-size:18px;min-height:52px" aria-describedby="phone-err">
+      </div>
+      <span class="error" id="phone-err" hidden>Enter a 10-digit mobile number that starts with 9.</span>
+    </div>
+    <button type="submit" class="btn btn-primary btn-lg">Text me a code</button>
+    <p class="xs muted" style="line-height:1.5">We send a 6-digit code by SMS. It expires after 10 minutes.</p>
+  </form>
+
+  <form class="stack" style="--g:18px" data-step="code" novalidate hidden>
+    <span class="small muted" style="font-weight:600">Step 2 of 3</span>
+    <h2 class="display" style="font-size:26px;font-weight:700">Enter the code we sent to +63 <span id="phone-shown"></span></h2>
+    <div class="field">
+      <label for="code">6-digit code</label>
+      <input id="code" class="input" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="••••••" style="font-size:28px;letter-spacing:.4em;min-height:60px;padding:0 16px" aria-describedby="code-err">
+      <span class="error" id="code-err" hidden></span>
+      <div class="row small muted" style="--g:8px 16px">
+        <span id="resend-timer">Resend code in 0:45</span>
+        <button type="button" id="resend" hidden style="font-weight:600;color:var(--navy);background:none;border:0;padding:0;text-decoration:underline;cursor:pointer">Resend code</button>
+        <button type="button" id="change-number" style="font-weight:600;color:var(--navy);background:none;border:0;padding:0;text-decoration:underline;cursor:pointer">Change number</button>
+      </div>
+      <span class="xs muted">Prototype: no SMS is sent. Any 6 digits will work.</span>
+    </div>
+    <label class="check"><input type="checkbox" id="agree"><span>I agree to the <a href="info.html#terms" target="_blank">Terms</a> and <a href="info.html#privacy" target="_blank">Privacy Notice</a>.</span></label>
+    <label class="check" style="background:var(--bg-3);border-radius:12px;padding:12px"><input type="checkbox" id="aegis"><span><strong>Optional:</strong> help improve Iskaparate and train AI models with our partner Ascend Aegis. You can change this any time.</span></label>
+    <button type="submit" class="btn btn-primary btn-lg">Verify and continue</button>
+  </form>
+
+  <form class="stack" style="--g:18px" data-step="profile" novalidate hidden>
+    <span class="small muted" style="font-weight:600">Step 3 of 3 · all optional</span>
+    <h2 class="display" style="font-size:26px;font-weight:700">Tell us a little about you</h2>
+    <div class="grid" style="--min:200px;--g:14px">
+      <div class="field"><label for="your-name">Your name</label><input id="your-name" class="input" type="text" autocomplete="name" placeholder="Rosa Mendoza"></div>
+      <div class="field"><label for="shop-name">Shop name</label><input id="shop-name" class="input" type="text" placeholder="Kusina ni Aling Rosa"></div>
+    </div>
+    <fieldset>
+      <legend>I want to</legend>
+      <div class="row" style="--g:8px" id="roles"></div>
+    </fieldset>
+    <div class="field"><label for="partner-code">Partner organisation code (if your cooperative or foundation gave you one)</label><input id="partner-code" class="input" type="text" placeholder="e.g. COOP-1234"></div>
+    <button type="submit" class="btn btn-primary btn-lg">Open my workspace</button>
+  </form>
+
+  <div class="stack" style="--g:18px" data-step="done" hidden>
+    <h2 class="display" style="font-size:28px;font-weight:700" id="welcome">Welcome! Your workspace is open.</h2>
+    <p style="font-size:15px;line-height:1.5" class="muted" id="done-lead">Set up your shop now. Nothing goes on sale until you choose to start selling.</p>
+    <ol class="stack" style="margin:0;padding:0;list-style:none;--g:8px" id="checklist">
+      <li class="row" style="--g:12px;padding:12px 14px;border-radius:12px;background:var(--green-bg);font-weight:600"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F6B45" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>Mobile number verified</li>
+      <li class="row" style="--g:12px;padding:12px 14px;border-radius:12px;border:1px solid var(--line)"><span aria-hidden="true" style="width:20px;height:20px;border:2px solid #B9BBC9;border-radius:999px"></span>Add your shop story, logo and banner</li>
+      <li class="row" style="--g:12px;padding:12px 14px;border-radius:12px;border:1px solid var(--line)"><span aria-hidden="true" style="width:20px;height:20px;border:2px solid #B9BBC9;border-radius:999px"></span>Add a pickup location</li>
+      <li class="row" style="--g:12px;padding:12px 14px;border-radius:12px;border:1px solid var(--line)"><span aria-hidden="true" style="width:20px;height:20px;border:2px solid #B9BBC9;border-radius:999px"></span>Add your first products</li>
+    </ol>
+    <div class="stack note note-warm" style="border-radius:16px;padding:18px;--g:10px" id="to-sell">
+      <span class="bold">To start selling, you will need</span>
+      <ul class="stack" style="margin:0;padding-left:20px;--g:6px;font-size:15px;line-height:1.45">
+        <li>Your PhilSys national ID (or another valid ID) and a quick selfie</li>
+        <li>Your BIR Certificate of Registration (the Academy can help you get one)</li>
+        <li>A bank or e-wallet account for payouts</li>
+      </ul>
+    </div>
+    <a href="dashboard.html" class="btn btn-primary btn-lg" id="done-cta">Go to my workspace</a>
+    <button type="button" class="btn btn-quiet" id="restart">Prototype: start over</button>
+  </div>
+</section>
+</main>
+<div id="site-footer"></div>
+
+<script src="assets/js/site.js"></script>
+<script>
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const steps = [...document.querySelectorAll('[data-step]')];
+  const roleDefs = [{ id: 'sell', label: 'Sell' }, { id: 'buy', label: 'Buy' }, { id: 'wholesale', label: 'Buy wholesale' }];
+  const s = { phone: '', role: new URLSearchParams(location.search).get('role') || 'sell', timer: null };
+  if (!roleDefs.some((r) => r.id === s.role)) s.role = 'sell';
+
+  function go(step) {
+    steps.forEach((el) => { el.hidden = el.dataset.step !== step; });
+    const first = document.querySelector(`[data-step="${step}"] input, [data-step="${step}"] h2`);
+    if (first) { if (first.tagName === 'H2') { first.tabIndex = -1; } first.focus({ preventScroll: true }); }
+  }
+  const digits = (v) => v.replace(/\D/g, '');
+  const prettyPhone = (d) => d.replace(/^(\d{3})(\d{3})(\d{0,4}).*/, '$1 $2 $3').trim();
+
+  $('phone').addEventListener('input', (e) => { const d = digits(e.target.value).replace(/^0/, '').slice(0, 10); e.target.value = prettyPhone(d); $('phone-err').hidden = true; });
+  document.querySelector('[data-step="phone"]').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const d = digits($('phone').value);
+    if (!/^9\d{9}$/.test(d)) { $('phone-err').hidden = false; $('phone').focus(); return; }
+    s.phone = d; $('phone-shown').textContent = prettyPhone(d);
+    startTimer(); go('code');
+  });
+
+  function startTimer() {
+    clearInterval(s.timer); let left = 45;
+    $('resend').hidden = true; $('resend-timer').hidden = false;
+    const tick = () => { $('resend-timer').textContent = `Resend code in 0:${String(left).padStart(2, '0')}`; if (left-- <= 0) { clearInterval(s.timer); $('resend-timer').hidden = true; $('resend').hidden = false; } };
+    tick(); s.timer = setInterval(tick, 1000);
+  }
+  $('resend').addEventListener('click', () => { startTimer(); ISK.toast('A new code is on its way'); });
+  $('change-number').addEventListener('click', () => { clearInterval(s.timer); $('code').value = ''; go('phone'); });
+  $('code').addEventListener('input', (e) => { e.target.value = digits(e.target.value).slice(0, 6); $('code-err').hidden = true; });
+  document.querySelector('[data-step="code"]').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const err = $('code-err');
+    if ($('code').value.length !== 6) { err.textContent = 'Enter all 6 digits of the code.'; err.hidden = false; $('code').focus(); return; }
+    if (!$('agree').checked) { err.textContent = 'Please agree to the Terms and Privacy Notice to continue.'; err.hidden = false; $('agree').focus(); return; }
+    clearInterval(s.timer); renderRoles(); go('profile');
+  });
+
+  function renderRoles() {
+    $('roles').innerHTML = roleDefs.map((r) => `<button type="button" class="chip" style="min-height:44px" data-id="${r.id}" aria-pressed="${r.id === s.role}">${r.label}</button>`).join('');
+  }
+  $('roles').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { s.role = b.dataset.id; renderRoles(); } });
+  document.querySelector('[data-step="profile"]').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const first = ($('your-name').value.trim() || 'Rosa').split(' ')[0];
+    $('welcome').textContent = `Welcome, ${first}! ${s.role === 'sell' ? 'Your workspace is open.' : 'Your account is ready.'}`;
+    const seller = s.role === 'sell';
+    $('checklist').hidden = !seller; $('to-sell').hidden = !seller;
+    $('done-lead').textContent = seller ? 'Set up your shop now. Nothing goes on sale until you choose to start selling.'
+      : s.role === 'wholesale' ? 'Send your business registration and Iskaparate Operations will review your reseller application. Until then you can shop at retail prices.'
+      : 'You can now check out, send order requests and track your orders.';
+    $('done-cta').textContent = seller ? 'Go to my workspace' : 'Start shopping';
+    $('done-cta').href = seller ? 'dashboard.html' : 'index.html#featured';
+    ISK.store.set('isk-user', { phone: s.phone, name: $('your-name').value.trim(), shop: $('shop-name').value.trim(), role: s.role, aegisConsent: $('aegis').checked });
+    go('done');
+  });
+  $('restart').addEventListener('click', () => {
+    steps.forEach((f) => { if (f.tagName === 'FORM') f.reset(); });
+    $('phone').value = ''; s.phone = ''; go('phone');
+  });
+})();
+</script>
+</body>
+</html>
