@@ -23,13 +23,11 @@
   const state = { reply: 'waiting', method: 'gcash', paid: false, counterTaken: false, paidTotal: 0 };
   const methods = [
     { id: 'gcash', label: 'GCash', note: 'E-wallet' },
-    { id: 'maya', label: 'Maya', note: 'E-wallet' },
-    { id: 'qrph', label: 'QR Ph', note: 'Scan with any bank app' },
-    { id: 'card', label: 'Credit or debit card', note: 'Visa, Mastercard' },
-    { id: 'bank', label: 'Online banking', note: 'BPI, BDO, UnionBank and more' }
+    { id: 'maya', label: 'Maya', note: 'E-wallet (PayMaya)' },
+    { id: 'instapay', label: 'InstaPay', note: 'Transfer from any bank app' }
   ];
   const confirmGroups = groups.filter((g) => g.confirmFirst);
-  const sellerName = (g) => (g.shopId === 'rosa' ? 'Aling Rosa' : g.shop.name);
+  const sellerName = (g) => g.shop.short || g.shop.name;
   const now = new Date();
   const sentAt = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }).toLowerCase();
   const sentDay = now.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
@@ -48,11 +46,9 @@
 
   function statusBlock(g) {
     const who = sellerName(g);
-    const when = (g.how === 'pickup' ? 'pickup ' : 'delivery ') + (g.meta.date || 'on the agreed date');
-    if (!g.confirmFirst) return `<div class="row note note-green" style="--g:12px">${tick()}<span class="bold">In stock, accepted automatically</span></div>`;
-    if (state.reply === 'waiting') return `<div class="row note note-warm" style="--g:14px;flex-wrap:nowrap"><span class="pulse" aria-hidden="true"></span><div class="stack" style="--g:2px"><span class="bold">Waiting for ${esc(who)} to confirm</span><span class="small muted">We texted ${g.shopId === 'rosa' ? 'her' : 'them'} at ${sentAt}. Sellers usually answer within 30 minutes; after 2 hours the request closes and nothing is charged.</span></div></div>`;
+    if (state.reply === 'waiting') return `<div class="row note note-warm" style="--g:14px;flex-wrap:nowrap"><span class="pulse" aria-hidden="true"></span><div class="stack" style="--g:2px"><span class="bold">Waiting for ${esc(who)} to confirm</span><span class="small muted">We texted the seller at ${sentAt}. Most answer within 30 minutes; after 2 hours the request closes and nothing is charged.</span></div></div>`;
     if (state.reply === 'counter') return `<div class="stack note note-warm" style="--g:12px;padding:16px"><span class="bold">${esc(who)} suggested a change</span><p style="font-size:15px;line-height:1.5">${g.shopId === 'rosa' ? '“Fully booked Saturday. I can have both jars ready <strong>Sunday 15 Dec, 10 am to 12 nn</strong>, same price.”' : '“I can have it ready <strong>one day later</strong>, same price.”'}</p><div class="row" style="--g:8px"><button type="button" class="btn btn-primary btn-sm" data-act="takeCounter" style="font-weight:700">Accept ${g.shopId === 'rosa' ? 'Sunday' : 'new date'}</button><button type="button" class="btn btn-outline btn-sm" data-act="refuseCounter">No thanks, remove item</button></div></div>`;
-    if (state.reply === 'accepted') return `<div class="row note note-green" style="--g:12px;flex-wrap:nowrap">${tick()}<div class="stack" style="--g:2px"><span class="bold">Accepted by ${esc(who)}</span><span class="small" style="color:#3F4A45">${g.how === 'pickup' ? 'Pickup' : 'Delivery'} ${state.counterTaken && g.shopId === 'rosa' ? 'Sun 15 Dec, 10 am to 12 nn' : esc(g.meta.date || 'on the date you asked for')}</span></div></div>`;
+    if (state.reply === 'accepted') return `<div class="row note note-green" style="--g:12px;flex-wrap:nowrap">${tick()}<div class="stack" style="--g:2px"><span class="bold">Accepted by ${esc(who)}</span><span class="small" style="color:#3F4A45">Delivery ${state.counterTaken && g.shopId === 'rosa' ? 'Sun 15 Dec, 10 am to 12 nn' : esc(g.meta.date || 'on the date you asked for')}</span></div></div>`;
     return `<div class="stack note note-grey" style="--g:6px"><span class="bold">${esc(who)} can’t take this order. Nothing was charged for it.</span><a href="index.html#featured" class="small bold">See similar shops</a></div>`;
   }
   function tick() { return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1F6B45" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M5 12l5 5 9-10"/></svg>'; }
@@ -74,7 +70,7 @@
     if (answered) heading = payable().length ? 'Ready to pay' : 'No items left to pay for';
     const m = methods.find((x) => x.id === state.method);
     const lines = payable().map((g) => g.lines.map((l) => `<div class="row between" style="--g:12px"><span>${esc(l.name)} × ${l.qty}</span><span>${fmt(l.total)}</span></div>`).join('') +
-      (g.how === 'delivery' ? `<div class="row between muted" style="--g:12px"><span>Courier from ${esc(g.shop.name)}, 3 to 5 days</span><span>${fmt(g.shipping)}</span></div>` : `<div class="row between muted" style="--g:12px"><span>${esc(g.shop.pickup)}</span><span>Free</span></div>`)).join('');
+      `<div class="row between muted" style="--g:12px"><span>${g.how === 'seller' ? 'Delivered by ' + esc(sellerName(g)) : 'Courier from ' + esc(g.shop.area) + ', 3 to 5 days'}</span><span>${g.shipping ? fmt(g.shipping) : 'Free'}</span></div>`).join('');
 
     root.innerHTML = `
       <div class="stack" style="--g:8px"><h1 class="h1">${heading}</h1><p class="muted">Request #4821 · sent ${sentDay}, ${sentAt}</p></div>
@@ -82,7 +78,7 @@
         <div class="main stack" style="--g:16px">
           <section aria-label="Seller answers" class="panel">
             ${groups.map((g, i) => `<div class="stack" style="padding:20px;--g:12px;${i < groups.length - 1 ? 'border-bottom:1px solid var(--line-2)' : ''}">
-              <div class="row between baseline" style="--g:8px 16px"><span class="bold" style="font-size:17px">${esc(g.shop.name)}</span><span class="small muted">${g.lines.map((l) => esc(l.name) + ' × ' + l.qty).join(', ')} · ${g.how === 'pickup' ? 'pickup' : 'courier delivery'}</span></div>
+              <div class="row between baseline" style="--g:8px 16px"><span class="bold" style="font-size:17px">${esc(g.shop.name)}</span><span class="small muted">${g.lines.map((l) => esc(l.name) + ' × ' + l.qty).join(', ')} · ${g.how === 'seller' ? 'delivered by the seller' : 'courier delivery'}</span></div>
               ${statusBlock(g)}
             </div>`).join('')}
           </section>
@@ -108,7 +104,7 @@
               ${methods.map((x) => `<button type="button" class="option option-row" data-method="${x.id}" aria-pressed="${x.id === state.method}"><span style="font-weight:${x.id === state.method ? 700 : 600}">${x.label}</span><span class="xs muted">${x.note}</span></button>`).join('')}
             </fieldset>
             <button type="button" class="btn btn-primary btn-lg" data-act="pay">Pay ${fmt(total())} with ${m.label}</button>
-            <p class="xs muted" style="line-height:1.5">You finish paying on the payment provider’s secure page. Iskaparate never sees your card or bank details.</p>` :
+            <p class="xs muted" style="line-height:1.5">You approve the payment in your GCash, Maya or bank app. Iskaparate never sees your PIN or bank login.</p>` :
             '<div class="note note-grey small muted">Nothing will be charged. <a href="index.html#featured">Keep shopping</a></div>'}
         </aside>
       </div>`;
@@ -129,7 +125,7 @@
       store.set('isk-last-order', {
         id: '4821', total: state.paidTotal, method: methods.find((x) => x.id === state.method).label,
         day: sentDay, time: sentAt, counterTaken: state.counterTaken,
-        groups: pay.map((g) => ({ shopId: g.shopId, name: g.shop.name, how: g.how, pickup: g.shop.pickup, date: g.meta.date || '', confirmFirst: g.confirmFirst, subtotal: g.subtotal, shipping: g.shipping, lines: g.lines.map((l) => ({ name: l.name, qty: l.qty, total: l.total })) }))
+        groups: pay.map((g) => ({ shopId: g.shopId, name: g.shop.name, short: g.shop.short, area: g.shop.area, how: g.how, date: g.meta.date || '', confirmFirst: g.confirmFirst, subtotal: g.subtotal, shipping: g.shipping, lines: g.lines.map((l) => ({ name: l.name, qty: l.qty, total: l.total })) }))
       });
       cart.clear();
       store.set('isk-received', {});

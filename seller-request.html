@@ -30,12 +30,12 @@
     </div>
     <div class="card stack" style="padding:16px;--g:12px;font-size:15px">
       <div class="row between" style="--g:10px"><span class="bold">Ube halaya, 500 g × 2</span><span class="bold">₱560</span></div>
-      <div class="stack" style="--g:2px"><span class="xs muted">Needed by</span><span style="font-weight:600">Sat 14 Dec, 2 to 4 pm · pickup in Cubao</span></div>
+      <div class="stack" style="--g:2px"><span class="xs muted">Needed by</span><span style="font-weight:600">Sat 14 Dec, afternoon · you deliver to Project 4, Quezon City</span></div>
       <div class="stack" style="--g:2px"><span class="xs muted">Buyer</span><span style="font-weight:600">Mika D. · first order with you</span></div>
       <div style="background:var(--bg-3);border-radius:10px;padding:10px 12px;font-size:14px;line-height:1.45">“Less sweet if possible, for a birthday.”</div>
       <div class="stack small muted" style="border-top:1px solid var(--line-2);padding-top:12px;--g:4px;line-height:1.45">
         <span>You receive ₱560 less [COMMISSION %] commission.</span>
-        <span>30% arrives as soon as Mika pays; the rest after pickup and the 3-day return window.</span>
+        <span>30% arrives in your GCash as soon as Mika pays; the rest after delivery and the 3-day return window.</span>
       </div>
     </div>
     <button type="button" class="btn btn-primary btn-lg" style="font-size:18px" data-go="accepted">Accept order</button>
@@ -64,7 +64,7 @@
   <div class="card stack" style="--g:14px;border-radius:18px" data-mode="done" hidden>
     <h1 class="display" style="font-size:26px" id="done-title"></h1>
     <p style="font-size:15px;line-height:1.55" class="muted" id="done-text"></p>
-    <a href="dashboard.html" class="btn btn-primary" style="min-height:52px;font-weight:700">Open my workspace</a>
+    <a href="tel:+63000000000" class="btn btn-outline" style="min-height:52px;font-weight:700">Questions? Call Iskaparate [HOTLINE]</a>
     <button type="button" class="btn btn-quiet" data-go="open">Prototype: start over</button>
   </div>
 </div>
@@ -73,7 +73,7 @@
 <script src="assets/js/site.js"></script>
 <script>
 (function () {
-  const slots = [{ id: 'sat', label: 'Sat 14 Dec, 4 to 6 pm' }, { id: 'sun', label: 'Sun 15 Dec, 10 am to 12 nn' }, { id: 'mon', label: 'Mon 16 Dec, 2 to 4 pm' }];
+  const slots = [{ id: 'sat', label: 'Sat 14 Dec, evening' }, { id: 'sun', label: 'Sun 15 Dec, 10 am to 12 nn' }, { id: 'mon', label: 'Mon 16 Dec, 2 to 4 pm' }];
   let slot = 'sun';
   const modes = [...document.querySelectorAll('[data-mode]')];
   function show(mode) {

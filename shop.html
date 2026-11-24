@@ -22,9 +22,9 @@
     <div class="avatar" aria-hidden="true">KR</div>
     <div class="stack" style="--g:10px;padding-top:16px">
       <h1 class="h1">Kusina ni Aling Rosa</h1>
-      <p style="font-size:15px" class="muted">Home kitchen · Cubao, Quezon City · Pickup or delivery in Metro Manila</p>
+      <p style="font-size:15px" class="muted">Home kitchen · Cubao, Quezon City · Delivers within Quezon City and nearby</p>
       <div class="row" style="--g:8px">
-        <span class="pill">Verified seller</span>
+        <span class="pill">ID-verified seller</span>
         <span class="pill pill-cream">Endorsed by [PARTNER COOPERATIVE]</span>
         <span class="pill pill-green">Wholesale available</span>
       </div>
@@ -46,7 +46,7 @@
   <div class="container">
     <a href="#products" class="on">Products</a>
     <a href="#story">Story</a>
-    <a href="#pickup">Pickup and delivery</a>
+    <a href="#delivery">Delivery</a>
     <a href="#reviews">Reviews</a>
   </div>
 </nav>
@@ -61,25 +61,25 @@
     <div class="stack" style="--g:16px">
       <p class="eyebrow">Her story</p>
       <h2 class="display" style="font-size:32px;line-height:1.1">Cooking for the barangay, now for all of Metro Manila.</h2>
-      <p class="lead" style="line-height:1.65">Rosa started with ube halaya for neighbours' birthdays. Her cooperative helped her get her BIR registration and join Iskaparate, and the Academy taught her to photograph her jars on her phone.</p>
-      <p class="lead" style="line-height:1.65">She cooks to order, so she confirms each request before you pay. Party trays need two days' notice.</p>
+      <p class="lead" style="line-height:1.65">Rosa started with ube halaya for neighbours' birthdays. Her cooperative introduced her to Iskaparate, and our team photographed her jars and set up this shop for her.</p>
+      <p class="lead" style="line-height:1.65">She cooks to order and confirms every request by text before you pay, then delivers it herself. Party trays need two days' notice.</p>
     </div>
     <div class="ph" style="min-height:320px;border-radius:18px;padding:14px"><img src="assets/img/kitchen.jpg" alt="Cooking in a home kitchen" loading="lazy"></div>
   </div>
 </section>
 
-<section id="pickup" class="container stack" style="padding-top:56px;padding-bottom:56px;--g:20px">
-  <h2 class="display" style="font-size:30px">Pickup and delivery</h2>
+<section id="delivery" class="container stack" style="padding-top:56px;padding-bottom:56px;--g:20px">
+  <h2 class="display" style="font-size:30px">Delivery</h2>
   <div class="grid" style="--min:320px">
     <div class="card stack" style="--g:8px">
-      <span class="bold" style="font-size:17px">Pickup in Cubao</span>
-      <span class="muted" style="font-size:15px;line-height:1.5">[PICKUP ADDRESS], Cubao, Quezon City</span>
-      <span class="muted" style="font-size:15px;line-height:1.5">Tuesday to Sunday, 9 am to 6 pm. Show your pickup QR code.</span>
+      <span class="bold" style="font-size:17px">Delivered by Aling Rosa</span>
+      <span class="muted" style="font-size:15px;line-height:1.5">Quezon City and nearby cities, Tuesday to Sunday. ₱100 delivery fee.</span>
+      <span class="muted" style="font-size:15px;line-height:1.5">She texts you when she is on the way.</span>
     </div>
     <div class="card stack" style="--g:8px">
-      <span class="bold" style="font-size:17px">Delivery</span>
-      <span class="muted" style="font-size:15px;line-height:1.5">Same-day courier within Metro Manila. The fee is quoted at checkout.</span>
-      <span class="muted" style="font-size:15px;line-height:1.5">Wholesale orders above ₱5,000 ship free.</span>
+      <span class="bold" style="font-size:17px">Farther away</span>
+      <span class="muted" style="font-size:15px;line-height:1.5">Iskaparate books a courier for the rest of Metro Manila. The fee is shown in your cart.</span>
+      <span class="muted" style="font-size:15px;line-height:1.5">Wholesale orders above ₱5,000 are delivered free.</span>
     </div>
   </div>
 </section>
@@ -117,7 +117,7 @@
   render();
 
   const reviews = [
-    { name: 'Mika D.', stars: '5 of 5', item: 'Ube halaya, 500 g jar', text: 'Picked up warm on Saturday. Rosa confirmed in ten minutes and the QR pickup took seconds.' },
+    { name: 'Mika D.', stars: '5 of 5', item: 'Ube halaya, 500 g jar', text: 'Arrived warm on Saturday. Rosa confirmed in ten minutes and delivered it herself.' },
     { name: 'Jun R.', stars: '5 of 5', item: 'Chicken adobo party tray', text: 'Fed the whole office. She moved our date by a day and we agreed in the app before paying.' },
     { name: 'Carla S.', stars: '4 of 5', item: 'Leche flan, 2 llaneras', text: 'Very good, a little sweet for us. Courier was on time.' }
   ];
@@ -140,7 +140,7 @@
   const io = new IntersectionObserver((ents) => ents.forEach((en) => {
     if (en.isIntersecting) tabs.forEach((t) => t.classList.toggle('on', t.getAttribute('href') === '#' + en.target.id));
   }), { rootMargin: '-45% 0px -50% 0px' });
-  ['products', 'story', 'pickup', 'reviews'].forEach((id) => io.observe(document.getElementById(id)));
+  ['products', 'story', 'delivery', 'reviews'].forEach((id) => io.observe(document.getElementById(id)));
 })();
 </script>
 </body>

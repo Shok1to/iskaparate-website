@@ -3,101 +3,88 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Seller workspace — Iskaparate.ph</title>
+<title>Operations console — Iskaparate.ph</title>
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="assets/css/styles.css">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<style>
+  .tbl { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .tbl th { text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--text-2); font-weight: 600; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+  .tbl td { padding: 12px 10px; border-bottom: 1px solid var(--line-2); vertical-align: top; }
+  .tbl tr:last-child td { border-bottom: 0; }
+  .tbl-wrap { overflow-x: auto; }
+  .acts { display: flex; flex-wrap: wrap; gap: 6px; }
+  .acts .btn { min-height: 36px; padding: 0 12px; font-size: 13px; }
+  .st { display: inline-block; font-size: 12px; font-weight: 700; border-radius: 999px; padding: 4px 10px; white-space: nowrap; }
+  .st-wait { background: var(--cream); } .st-ok { background: var(--green-bg); color: #1F4D36; } .st-no { background: #F1F1F4; color: #3F4357; } .st-info { background: var(--lav); }
+</style>
 </head>
 <body class="ws" data-page="dashboard">
 <header class="ws-header">
   <div class="container">
     <div class="row" style="--g:14px">
       <a href="index.html" class="brand-word" style="font-size:22px;text-decoration:none;color:#fff">iskaparate<span style="color:var(--gold-soft)">.ph</span></a>
-      <span class="small" style="color:#C9CBDC;border-left:1px solid #4A4F78;padding-left:14px">Seller workspace</span>
+      <span class="small" style="color:#C9CBDC;border-left:1px solid #4A4F78;padding-left:14px">Operations console · staff only</span>
     </div>
     <div class="row small" style="--g:16px">
-      <a href="shop.html" style="font-weight:600">View my shop</a>
-      <span style="width:36px;height:36px;border-radius:999px;background:var(--gold);color:var(--navy);display:flex;align-items:center;justify-content:center;font-weight:800" aria-label="Signed in as Rosa">KR</span>
+      <a href="index.html" style="font-weight:600">View the mall</a>
+      <span style="width:36px;height:36px;border-radius:999px;background:var(--gold);color:var(--navy);display:flex;align-items:center;justify-content:center;font-weight:800" aria-label="Signed in as a store minder">SM</span>
     </div>
   </div>
 </header>
 
 <div class="ws-wrap">
-  <nav aria-label="Workspace" class="ws-nav">
+  <nav aria-label="Console" class="ws-nav">
     <a href="#top" aria-current="page">Today</a>
-    <a href="#requests">Order requests <span class="badge" id="open-count">2</span></a>
-    <a href="#pickups">Orders and pickups</a>
-    <a href="#make">Listings and stock</a>
-    <a href="#" data-soon>Shipping</a>
-    <a href="#wallet">Wallet and payouts</a>
-    <a href="#" data-soon>Shop profile</a>
-    <a href="#" data-soon>Team and store minder</a>
-    <a href="info.html#academy">Iskaparate Academy</a>
+    <a href="#confirm">Waiting for vendors <span class="badge" id="n-confirm"></span></a>
+    <a href="#deliveries">Deliveries</a>
+    <a href="#sourcing">Find-it requests <span class="badge" id="n-sourcing"></span></a>
+    <a href="#applications">Vendor applications <span class="badge" id="n-apps"></span></a>
+    <a href="#money">Payments held</a>
   </nav>
 
   <main class="ws-main" id="top">
     <div class="row between baseline" style="--g:8px 24px">
-      <h1 class="display" style="font-size:36px" id="greeting">Magandang umaga, Rosa</h1>
+      <h1 class="display" style="font-size:34px">Today</h1>
       <span style="font-size:15px" class="muted" id="today"></span>
     </div>
+    <p class="note note-warm small" style="line-height:1.5">Prototype: sample data. Iskaparate staff run every vendor’s shop; vendors only answer order texts and deliver.</p>
 
-    <section id="requests" aria-label="Order requests" class="card stack" style="border-radius:18px;padding:20px;--g:14px">
-      <div class="row between baseline" style="--g:6px 16px">
-        <h2 class="h3">Order requests waiting for you</h2>
-        <span class="small muted">Buyers pay only after you accept</span>
-      </div>
-      <div class="stack" style="--g:14px" id="request-list"></div>
+    <section id="confirm" class="card stack" style="border-radius:18px;padding:20px;--g:12px">
+      <div class="row between baseline" style="--g:6px 16px"><h2 class="h3">Waiting for vendors to confirm</h2><span class="small muted">Buyers pay only after the vendor says yes</span></div>
+      <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Order</th><th>Vendor</th><th>Status</th><th>Actions</th></tr></thead><tbody id="confirm-rows"></tbody></table></div>
     </section>
 
-    <div class="grid" style="--min:320px;--g:20px">
-      <section id="make" aria-label="To make this week" class="card stack" style="border-radius:18px;padding:20px">
-        <h2 class="h3">To make this week</h2>
-        <ul class="list">
-          <li><span>Ube halaya, 500 g</span><span class="bold">8 jars by Fri</span></li>
-          <li><span>Leche flan</span><span class="bold">4 llaneras by Thu</span></li>
-          <li><span>Chicken adobo party tray</span><span class="bold" id="tray-count">1 tray by Sun</span></li>
-        </ul>
-      </section>
-      <section id="pickups" aria-label="Pickups" class="card stack" style="border-radius:18px;padding:20px">
-        <h2 class="h3">Pickups on Saturday 14 Dec</h2>
-        <ul class="list" id="pickup-list">
-          <li data-code="482913"><span>2 to 4 pm · Mika D. · #4821</span><span class="bold">2 jars</span></li>
-          <li data-code="771204"><span>4 to 6 pm · Paolo G. · #4828</span><span class="bold">3 jars</span></li>
-        </ul>
-        <form class="stack" style="--g:8px" id="scan-form" hidden>
-          <label for="scan-code" class="bold small">Type the buyer’s 6-digit pickup code</label>
-          <div class="row" style="--g:8px;flex-wrap:nowrap"><input id="scan-code" class="input" inputmode="numeric" maxlength="7" placeholder="482 913"><button class="btn btn-primary btn-sm" type="submit">Release</button></div>
-          <span class="xs muted">Prototype: try 482 913 (Mika) or 771 204 (Paolo).</span>
-        </form>
-        <button type="button" class="btn btn-primary" id="scan-btn" style="font-weight:700"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 8V5a1 1 0 011-1h3M16 4h3a1 1 0 011 1v3M20 16v3a1 1 0 01-1 1h-3M8 20H5a1 1 0 01-1-1v-3M4 12h16"/></svg>Scan a pickup QR code</button>
-      </section>
-    </div>
+    <section id="deliveries" class="card stack" style="border-radius:18px;padding:20px;--g:12px">
+      <div class="row between baseline" style="--g:6px 16px"><h2 class="h3">Deliveries this week</h2><span class="small muted">By the vendor or a booked courier</span></div>
+      <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Order</th><th>Delivered by</th><th>When</th><th>Status</th></tr></thead><tbody>
+        <tr><td><strong>#4821</strong> · Mika D.<br><span class="muted">Ube halaya × 2 → Project 4, QC</span></td><td>Aling Rosa</td><td>Sat 14 Dec, afternoon</td><td><span class="st st-wait">Being prepared</span></td></tr>
+        <tr><td><strong>#4821</strong> · Mika D.<br><span class="muted">Banig placemats → Project 4, QC</span></td><td>Courier from Iloilo</td><td>Thu 12 to Fri 13 Dec</td><td><span class="st st-info">With courier</span></td></tr>
+        <tr><td><strong>#4817</strong> · Lea M.<br><span class="muted">Pastillas × 3 → Malolos</span></td><td>Lola Cora’s family</td><td>Today, 3 pm</td><td><span class="st st-info">Out for delivery</span></td></tr>
+        <tr><td><strong>#4809</strong> · Rico T.<br><span class="muted">Dried mangoes × 24 → Makati</span></td><td>Courier from Cebu</td><td>Delivered Mon</td><td><span class="st st-ok">Return window</span></td></tr>
+      </tbody></table></div>
+    </section>
 
-    <section id="wallet" aria-label="Wallet" class="card stack" style="border-radius:18px;padding:20px;--g:16px">
-      <div class="row between baseline" style="--g:6px 16px">
-        <h2 class="h3">Wallet</h2>
-        <span class="small muted">Next payout Fri 13 Dec to GCash ending 4417</span>
-      </div>
+    <section id="sourcing" class="card stack" style="border-radius:18px;padding:20px;--g:12px">
+      <div class="row between baseline" style="--g:6px 16px"><h2 class="h3">Find-it requests</h2><span class="small muted">From the “Can’t find it?” chat. Vendor names are never shown to buyers.</span></div>
+      <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Buyer wants</th><th>Our vendors</th><th>Other shops</th><th>Status</th><th>Actions</th></tr></thead><tbody id="sourcing-rows"></tbody></table></div>
+    </section>
+
+    <section id="applications" class="card stack" style="border-radius:18px;padding:20px;--g:12px">
+      <div class="row between baseline" style="--g:6px 16px"><h2 class="h3">Vendor applications</h2><span class="small muted">Check one valid government ID, then set up the shop</span></div>
+      <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Applicant</th><th>Sells</th><th>ID to check</th><th>Status</th><th>Actions</th></tr></thead><tbody id="app-rows"></tbody></table></div>
+    </section>
+
+    <section id="money" class="card stack" style="border-radius:18px;padding:20px;--g:16px">
+      <div class="row between baseline" style="--g:6px 16px"><h2 class="h3">Payments held by Iskaparate</h2><span class="small muted">GCash, Maya and InstaPay only</span></div>
       <div class="grid" style="--min:170px;--g:12px">
-        <div class="stat"><span class="xs muted">Advances received</span><b>₱972</b><span style="font-size:12px" class="muted">30% of made-to-order orders, once paid</span></div>
-        <div class="stat"><span class="xs muted">Waiting for pickup or delivery</span><b id="w-waiting">₱2,268</b><span style="font-size:12px" class="muted">Held by Iskaparate</span></div>
-        <div class="stat"><span class="xs muted">In 3-day return window</span><b id="w-window">₱1,180</b><span style="font-size:12px" class="muted">Released if no problem is reported</span></div>
-        <div class="stat" style="background:var(--cream)"><span class="xs muted">Ready to pay out</span><b>₱6,420</b><span style="font-size:12px" class="muted">After [COMMISSION %] commission</span></div>
+        <div class="stat"><span class="xs muted">Waiting for delivery</span><b>₱18,420</b><span style="font-size:12px" class="muted">23 orders</span></div>
+        <div class="stat"><span class="xs muted">In 3-day return window</span><b>₱9,860</b><span style="font-size:12px" class="muted">14 orders</span></div>
+        <div class="stat" style="background:var(--cream)"><span class="xs muted">To pay vendors on Friday</span><b>₱31,205</b><span style="font-size:12px" class="muted">to GCash or Maya, after [COMMISSION %]</span></div>
+        <div class="stat"><span class="xs muted">Refunds this month</span><b>₱0</b><span style="font-size:12px" class="muted">Vendors confirm before buyers pay</span></div>
       </div>
-      <p class="small muted" style="line-height:1.5">Withholding tax: not applied. Your BIR-received sworn declaration (₱500,000 or less a year) is on file. <a href="#" style="font-weight:600" data-soon>Download certificates</a></p>
-    </section>
-
-    <section aria-label="Shop health" class="card stack" style="border-radius:18px;padding:20px">
-      <h2 class="h3">Shop health</h2>
-      <div class="grid" style="--min:240px;--g:10px">
-        <div class="health" style="background:var(--green-bg)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F6B45" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>National ID check passed</div>
-        <div class="health" style="background:var(--green-bg)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F6B45" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>BIR certificate approved</div>
-        <div class="health" style="background:var(--green-bg)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F6B45" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>Payout account live (GCash)</div>
-        <div class="health" style="background:var(--cream)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8A5A00" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/></svg>Food permit expires in 21 days</div>
-      </div>
-      <p class="small muted">Busy this month? <a href="info.html#store-minder" style="font-weight:600">Ask an Iskaparate store minder to run your shop.</a></p>
     </section>
   </main>
 </div>
@@ -106,75 +93,89 @@
 <script>
 (function () {
   const { store, toast, esc } = ISK;
-  const user = store.get('isk-user', null);
-  const first = user && user.role === 'sell' && user.name ? user.name.split(' ')[0] : 'Rosa';
-  const h = new Date().getHours();
-  const greet = h < 12 ? 'Magandang umaga' : h < 18 ? 'Magandang hapon' : 'Magandang gabi';
-  document.getElementById('greeting').textContent = `${greet}, ${first}`;
   document.getElementById('today').textContent = new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
 
-  const defs = [
-    { key: 'r1', id: '4836', buyer: 'Jun R.', items: 'Chicken adobo party tray × 1', when: 'needed Sun 15 Dec, 11 am', how: 'Delivery', total: '₱1,450', mins: 102 },
-    { key: 'r2', id: '4839', buyer: 'Ana P.', items: 'Ube halaya, 1 kg tub × 3', when: 'needed Fri 13 Dec', how: 'Pickup in Cubao', total: '₱1,560', mins: 118 }
+  /* Waiting for vendors */
+  const reqs = [
+    { key: 'r1', id: '4836', buyer: 'Jun R.', items: 'Chicken adobo party tray × 1', vendor: 'Aling Rosa', total: '₱1,450', texted: '10:40 am', left: '1 h 42 min' },
+    { key: 'r2', id: '4839', buyer: 'Ana P.', items: 'Ube halaya, 1 kg × 3', vendor: 'Aling Rosa', total: '₱1,560', texted: '10:56 am', left: '1 h 58 min' },
+    { key: 'r3', id: '4840', buyer: 'Ben C.', items: 'Pastillas, box of 30 × 5', vendor: 'Lola Cora', total: '₱1,500', texted: '9:15 am', left: '12 min' }
   ];
-  const status = store.get('isk-ws-requests', { r1: 'open', r2: 'open' });
-  const left = (m) => `${Math.floor(m / 60)} h ${String(m % 60).padStart(2, '0')} min`;
-
-  function render() {
-    const open = defs.filter((d) => status[d.key] === 'open').length;
-    document.getElementById('open-count').textContent = open;
-    document.getElementById('open-count').hidden = open === 0;
-    document.getElementById('tray-count').textContent = status.r1 === 'accepted' ? '2 trays by Sun' : '1 tray by Sun';
-    document.getElementById('request-list').innerHTML = defs.map((d) => `
-      <article class="row" style="border:1px solid var(--line);border-radius:14px;padding:16px;--g:14px 20px">
-        <div class="stack" style="flex:1 1 280px;--g:4px">
-          <span class="bold" style="font-size:16px">${esc(d.items)}</span>
-          <span class="small muted">#${d.id} · ${esc(d.buyer)} · ${esc(d.when)} · ${esc(d.how)}</span>
-          <span class="bold">${d.total}</span>
-        </div>
-        ${status[d.key] === 'open' ? `
-        <div class="stack" style="--g:8px;align-items:flex-end">
-          <span class="xs bold" style="color:var(--brown)"><span data-left="${d.key}">${left(d.mins)}</span> left to answer</span>
-          <div class="row" style="--g:8px;justify-content:flex-end">
-            <button type="button" class="btn btn-primary btn-sm" style="font-weight:700" data-accept="${d.key}">Accept</button>
-            <a href="seller-request.html" class="btn btn-outline btn-sm">Suggest a change</a>
-            <button type="button" class="btn btn-link" style="background:none" data-decline="${d.key}">Decline</button>
-          </div>
-        </div>` : status[d.key] === 'accepted'
-          ? '<span class="pill pill-green" style="font-size:14px;font-weight:700;padding:8px 14px;color:#1F4D36">Accepted · buyer asked to pay</span>'
-          : '<span class="pill" style="font-size:14px;font-weight:700;padding:8px 14px;background:#F1F1F4;color:#3F4357">Declined · buyer not charged</span>'}
-      </article>`).join('') +
-      (open === 0 ? '<button type="button" class="btn btn-quiet" style="align-self:flex-start" data-reset="1">Prototype: bring the requests back</button>' : '');
+  const rs = store.get('isk-ops-confirm', {});
+  const label = { open: ['st-wait', 'No answer yet'], yes: ['st-ok', 'Confirmed · buyer asked to pay'], no: ['st-no', 'Can’t do · buyer not charged'] };
+  function renderConfirm() {
+    document.getElementById('confirm-rows').innerHTML = reqs.map((r) => {
+      const st = rs[r.key] || 'open';
+      return `<tr><td><strong>#${r.id}</strong> · ${esc(r.buyer)}<br><span class="muted">${esc(r.items)} · ${r.total}</span></td>
+        <td>${esc(r.vendor)}<br><span class="muted xs">Texted ${r.texted}</span></td>
+        <td><span class="st ${label[st][0]}">${label[st][1]}</span>${st === 'open' ? `<br><span class="xs" style="color:var(--brown);font-weight:700">${r.left} left</span>` : ''}</td>
+        <td>${st === 'open' ? `<div class="acts"><button class="btn btn-outline" data-resend="${r.key}">Resend text</button><button class="btn btn-primary" data-yes="${r.key}">Vendor said yes by phone</button><button class="btn btn-link" style="background:none" data-no="${r.key}">Can’t do</button></div>` : `<button class="btn btn-quiet" data-undo="${r.key}">Undo</button>`}</td></tr>`;
+    }).join('');
+    const n = reqs.filter((r) => !rs[r.key] || rs[r.key] === 'open').length;
+    const b = document.getElementById('n-confirm'); b.textContent = n; b.hidden = !n;
   }
-  document.getElementById('request-list').addEventListener('click', (e) => {
+  document.getElementById('confirm-rows').addEventListener('click', (e) => {
     const b = e.target.closest('button'); if (!b) return;
-    if (b.dataset.accept) { status[b.dataset.accept] = 'accepted'; toast('Accepted. The buyer has been asked to pay.'); }
-    if (b.dataset.decline) { status[b.dataset.decline] = 'declined'; toast('Declined. The buyer was not charged.'); }
-    if (b.dataset.reset) { status.r1 = 'open'; status.r2 = 'open'; }
-    store.set('isk-ws-requests', status); render();
+    if (b.dataset.resend) return toast('Order text sent again');
+    if (b.dataset.yes) { rs[b.dataset.yes] = 'yes'; toast('Buyer has been asked to pay'); }
+    if (b.dataset.no) { rs[b.dataset.no] = 'no'; toast('Buyer told. Nothing was charged.'); }
+    if (b.dataset.undo) delete rs[b.dataset.undo];
+    store.set('isk-ops-confirm', rs); renderConfirm();
   });
-  // Count down the answer window once a minute
-  setInterval(() => { defs.forEach((d) => { d.mins = Math.max(0, d.mins - 1); const el = document.querySelector(`[data-left="${d.key}"]`); if (el) el.textContent = left(d.mins); }); }, 60000);
-  render();
+  renderConfirm();
 
-  // Pickup release by code (stands in for the QR scanner)
-  const scanBtn = document.getElementById('scan-btn'), form = document.getElementById('scan-form');
-  scanBtn.addEventListener('click', () => { form.hidden = !form.hidden; if (!form.hidden) document.getElementById('scan-code').focus(); });
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const code = document.getElementById('scan-code').value.replace(/\D/g, '');
-    const li = document.querySelector(`#pickup-list li[data-code="${code}"]`);
-    if (!li) { toast('That code doesn’t match a pickup today'); return; }
-    if (li.dataset.done) { toast('Already released'); return; }
-    li.dataset.done = '1';
-    li.lastElementChild.innerHTML = '<span class="pill pill-green">Picked up</span>';
-    document.getElementById('scan-code').value = '';
-    toast('Pickup confirmed. The 3-day return window has started.');
+  /* Find-it requests (includes any made on find.html in this browser) */
+  const sampleSrc = [
+    { id: 's1', who: 'Grace L.', want: 'Bamboo steamer, 2 tiers, under ₱800', ours: 'None', other: '3 options, ₱420 to ₱690', status: 'found' },
+    { id: 's2', who: 'Mark V.', want: 'Barong for a 7-year-old, need by 20 Dec', ours: '1 vendor (made to order)', other: '—', status: 'asking' },
+    { id: 's3', who: 'Tess A.', want: 'Sukang Iloko, 1 gallon', ours: 'None', other: '2 options, ₱380 to ₱450', status: 'sent' }
+  ];
+  const srcState = store.get('isk-ops-sourcing', {});
+  const sLabel = { new: ['st-wait', 'New'], asking: ['st-info', 'Asking our vendor'], found: ['st-info', 'Options found'], sent: ['st-ok', 'Options sent to buyer'], ordered: ['st-ok', 'Ordered for buyer'] };
+  function renderSourcing() {
+    const mine = store.get('isk-sourcing', []).map((r, i) => ({ id: 'u' + i, who: r.name || 'Website visitor', want: r.want + (r.budget ? ', budget ' + r.budget : ''), ours: r.ours ? r.ours + ' match' + (r.ours === 1 ? '' : 'es') : 'None', other: 'Checking…', status: 'new' }));
+    const rows = [...mine, ...sampleSrc];
+    document.getElementById('sourcing-rows').innerHTML = rows.map((r) => {
+      const st = srcState[r.id] || r.status;
+      return `<tr><td><strong>${esc(r.who)}</strong><br><span class="muted">${esc(r.want)}</span></td><td>${esc(r.ours)}</td><td>${esc(r.other)}</td><td><span class="st ${sLabel[st][0]}">${sLabel[st][1]}</span></td>
+        <td><div class="acts">${st === 'new' || st === 'found' || st === 'asking' ? `<button class="btn btn-primary" data-src="${r.id}" data-to="sent">Send options to buyer</button>` : ''}${st === 'sent' ? `<button class="btn btn-outline" data-src="${r.id}" data-to="ordered">Buyer paid: place order</button>` : ''}${st === 'ordered' ? '<span class="xs muted">Track in Deliveries</span>' : ''}</div></td></tr>`;
+    }).join('');
+    const n = rows.filter((r) => ['new', 'found'].includes(srcState[r.id] || r.status)).length;
+    const b = document.getElementById('n-sourcing'); b.textContent = n; b.hidden = !n;
+  }
+  document.getElementById('sourcing-rows').addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    srcState[b.dataset.src] = b.dataset.to; store.set('isk-ops-sourcing', srcState);
+    toast(b.dataset.to === 'sent' ? 'Options texted to the buyer, without vendor names' : 'Marked as ordered for the buyer');
+    renderSourcing();
   });
+  renderSourcing();
 
-  document.querySelectorAll('[data-soon]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); toast('This part of the workspace is coming in V1'); }));
-  // Highlight the nav item for the section in view
-  const navLinks = [...document.querySelectorAll('.ws-nav a[href^="#"]:not([data-soon])')];
+  /* Vendor applications */
+  const appState = store.get('isk-ops-apps', {});
+  function renderApps() {
+    const mine = store.get('isk-vendor-application', null);
+    const rows = [
+      ...(mine ? [{ id: 'me', name: mine.name || 'New applicant', city: mine.city, sells: mine.sells || '—', id_: mine.idType, ch: (mine.channels || []).join(', ') }] : []),
+      { id: 'a1', name: 'Lorna B.', city: 'Antipolo', sells: 'Suman, kakanin', id_: 'Senior citizen ID', ch: 'Facebook, Face to face' },
+      { id: 'a2', name: 'Josie P.', city: 'Batangas City', sells: 'Kapeng barako', id_: 'PhilSys national ID', ch: 'Market or bazaar' }
+    ];
+    const steps = { new: ['st-wait', 'Call to schedule'], id: ['st-info', 'ID checked'], live: ['st-ok', 'Shop live'] };
+    document.getElementById('app-rows').innerHTML = rows.map((r) => {
+      const st = appState[r.id] || 'new';
+      return `<tr><td><strong>${esc(r.name)}</strong><br><span class="muted">${esc(r.city || '')}</span></td><td>${esc(r.sells)}<br><span class="muted xs">${esc(r.ch || '')}</span></td><td>${esc(r.id_ || '—')}</td><td><span class="st ${steps[st][0]}">${steps[st][1]}</span></td>
+        <td><div class="acts">${st === 'new' ? `<button class="btn btn-primary" data-app="${r.id}" data-to="id">ID checked</button>` : ''}${st === 'id' ? `<button class="btn btn-primary" data-app="${r.id}" data-to="live">Photos done: publish shop</button>` : ''}</div></td></tr>`;
+    }).join('');
+    const n = rows.filter((r) => (appState[r.id] || 'new') !== 'live').length;
+    const b = document.getElementById('n-apps'); b.textContent = n; b.hidden = !n;
+  }
+  document.getElementById('app-rows').addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    appState[b.dataset.app] = b.dataset.to; store.set('isk-ops-apps', appState); renderApps();
+  });
+  renderApps();
+
+  const navLinks = [...document.querySelectorAll('.ws-nav a')];
   navLinks.forEach((a) => a.addEventListener('click', () => { navLinks.forEach((x) => x.removeAttribute('aria-current')); a.setAttribute('aria-current', 'page'); }));
 })();
 </script>

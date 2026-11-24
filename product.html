@@ -47,10 +47,7 @@
         </div>
       </div>
 
-      <fieldset id="how-set" hidden>
-        <legend>How you get it</legend>
-        <div class="grid" style="--min:200px;--g:10px" id="how"></div>
-      </fieldset>
+      <div class="note note-grey small" style="line-height:1.5;border-radius:12px" id="delivery-note"></div>
 
       <div class="stack" style="--g:10px">
         <button type="button" class="btn btn-primary btn-lg btn-block" id="add">Add to cart</button>
@@ -64,7 +61,7 @@
 
       <div class="row between note note-warm" style="--g:8px 16px;border-radius:16px" id="resale" hidden>
         <span class="small" style="line-height:1.5" id="resale-text"></span>
-        <a href="sell.html?role=wholesale" class="small bold">Apply as a reseller</a>
+        <a href="info.html#resellers" class="small bold">Apply as a reseller</a>
       </div>
     </div>
   </div>
@@ -83,8 +80,7 @@
   const catNames = { food: 'Food and pasalubong', crafts: 'Crafts and weaves', services: 'Services', wholesale: 'Wholesale', bundle: 'Curated bundles', home: 'Home and household' };
   const state = {
     size: p.sizes ? (params.get('size') && p.sizes.some((s) => s.id === params.get('size')) ? params.get('size') : p.defaultSize) : null,
-    qty: p.id === 'ube' ? 2 : 1,
-    how: shop.pickup ? 'pickup' : 'delivery'
+    qty: p.id === 'ube' ? 2 : 1
   };
   const sellerFirst = shop.name.replace(/^Kusina ni /, '');
   document.title = p.name + ' — ' + shop.name + ' — Iskaparate.ph';
@@ -101,14 +97,12 @@
   const mainPhoto = document.getElementById('main-photo');
   if (p.img) { mainPhoto.src = p.img; mainPhoto.alt = p.name; } else mainPhoto.remove();
 
-  const confirmFirst = p.type !== 'stock';
-  document.getElementById('confirm-note').textContent = confirmFirst
-    ? `${shop.name} confirms they can make it before you pay. Nothing is charged until they accept.`
-    : 'In stock: you can pay as soon as you check out.';
-  if (p.shop === 'rosa') document.getElementById('confirm-note').textContent = 'Aling Rosa confirms she can make it before you pay. Nothing is charged until she accepts.';
-
+  const who = shop.short || shop.name;
+  document.getElementById('confirm-note').textContent = `${who} confirms ${shop.short ? 'she' : 'they'} can fill your order before you pay. Nothing is charged until the order is accepted.`;
+  document.getElementById('delivery-note').innerHTML = shop.deliver === 'seller'
+    ? `<strong>Delivery:</strong> ${esc(shop.deliverNote)}${shop.fee ? ' · ' + fmt(shop.fee) : ''}.`
+    : `<strong>Delivery:</strong> by courier from ${esc(shop.area)}, 3 to 5 days · ${fmt(shop.fee)}.`;
   if (p.type === 'service') document.getElementById('date-label').textContent = 'Preferred date';
-  if (p.type === 'stock') document.getElementById('date-field').hidden = true;
   const dateInput = document.getElementById('needed-by');
   const min = new Date(Date.now() + 86400000).toISOString().slice(0, 10);
   dateInput.min = min;
@@ -129,26 +123,17 @@
       document.getElementById('size-set').hidden = false;
       document.getElementById('sizes').innerHTML = p.sizes.map((s) => `<button type="button" class="chip chip-sq" data-id="${s.id}" aria-pressed="${s.id === state.size}">${s.label} · ${fmt(s.price)}</button>`).join('');
     }
-    const ways = shop.pickup
-      ? [{ id: 'pickup', label: shop.pickup, note: 'Free · show your QR code' }, { id: 'delivery', label: 'Delivery', note: 'Courier fee quoted at checkout' }]
-      : null;
-    if (ways) {
-      document.getElementById('how-set').hidden = false;
-      document.getElementById('how').innerHTML = ways.map((w) => `<button type="button" class="option" data-id="${w.id}" aria-pressed="${w.id === state.how}"><span class="bold">${w.label}</span><span class="small muted">${w.note}</span></button>`).join('');
-    }
-    const pickup = state.how === 'pickup';
-    document.getElementById('held-title').textContent = p.type === 'service' ? 'Your payment is held until the job is done' : pickup ? 'Your payment is held until pickup' : 'Your payment is held until delivery';
+    document.getElementById('held-title').textContent = p.type === 'service' ? 'Your payment is held until the job is done' : 'Your payment is held until delivery';
     document.getElementById('held-text').textContent = p.type === 'service'
       ? 'Iskaparate keeps it until you confirm the visit, then releases it to the seller after 3 days if there is no problem.'
-      : `Iskaparate keeps it until you ${pickup ? 'pick up' : 'receive'} your order, then releases it to the seller after 3 days if there is no problem.`;
+      : 'Iskaparate keeps it until you receive your order, then releases it to the seller after 3 days if there is no problem.';
   }
   document.getElementById('sizes').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { state.size = b.dataset.id; render(); } });
-  document.getElementById('how').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { state.how = b.dataset.id; render(); } });
   document.getElementById('less').addEventListener('click', () => { state.qty = Math.max(1, state.qty - 1); render(); });
   document.getElementById('more').addEventListener('click', () => { state.qty = Math.min(24, state.qty + 1); render(); });
   document.getElementById('add').addEventListener('click', () => {
     cart.add(p.id, state.qty, state.size);
-    const meta = { how: state.how };
+    const meta = {};
     if (dateInput.value) meta.date = new Date(dateInput.value + 'T00:00').toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
     cart.setShopMeta(p.shop, meta);
     toast('Added to cart');

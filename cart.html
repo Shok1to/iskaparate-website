@@ -27,7 +27,7 @@
       <h2 style="font-size:20px">Summary</h2>
       <div class="stack" style="--g:10px;font-size:15px">
         <div class="row between"><span>Items</span><span style="font-weight:600" id="items-total"></span></div>
-        <div class="row between muted"><span>Delivery</span><span>Quoted when you pay</span></div>
+        <div class="row between muted"><span>Delivery</span><span id="delivery-total"></span></div>
         <div class="row between bold" style="padding-top:12px;border-top:1px solid var(--line-2);font-size:18px"><span>So far</span><span id="so-far"></span></div>
       </div>
       <a href="checkout.html" class="btn btn-primary btn-block" style="min-height:54px;font-weight:700" id="go"></a>
@@ -52,14 +52,14 @@
 
     groupsEl.innerHTML = groups.map((g) => {
       const shopName = g.shopId === 'rosa' ? `<a href="shop.html" style="font-weight:700;font-size:17px;text-decoration:none">${esc(g.shop.name)}</a>` : `<span class="bold" style="font-size:17px">${esc(g.shop.name)}</span>`;
-      const badge = g.confirmFirst ? '<span class="pill pill-cream">Seller confirms first · made to order</span>' : '<span class="pill pill-green">In stock · ready to pay</span>';
+      const badge = '<span class="pill pill-cream">Seller confirms before you pay</span>';
       const lines = g.lines.map((l) => `
         <div class="row" style="padding:18px 20px;--g:16px">
           <div class="ph" style="width:88px;height:88px;border-radius:12px;flex:none">${l.product.img ? `<img src="${l.product.img}" alt="">` : ''}</div>
           <div class="stack" style="flex:1 1 200px;--g:4px">
             <a href="product.html?id=${l.product.id}${l.size ? '&size=' + l.size : ''}" style="font-weight:600;font-size:16px;text-decoration:none">${esc(l.name)}</a>
             <span class="small muted">${fmt(l.unit)} each · ${esc(l.product.lead)}</span>
-            <button type="button" class="btn-link small" style="align-self:flex-start;padding:0;min-height:28px;background:none;border:0;color:var(--text-2);cursor:pointer;text-decoration:underline" data-remove="${l.key}">Remove</button>
+            <button type="button" class="small" style="align-self:flex-start;padding:0;min-height:28px;background:none;border:0;color:var(--text-2);cursor:pointer;text-decoration:underline" data-remove="${l.key}">Remove</button>
           </div>
           <div class="qty sm" role="group" aria-label="Quantity of ${esc(l.name)}">
             <button type="button" aria-label="Fewer" data-less="${l.key}">−</button>
@@ -68,33 +68,30 @@
           </div>
           <span style="min-width:80px;text-align:right;font-weight:700;font-size:17px">${fmt(l.total)}</span>
         </div>`).join('');
-      let extra = '';
-      if (g.confirmFirst) {
-        const ways = g.canPickup ? [{ id: 'pickup', label: g.shop.pickup }, { id: 'delivery', label: 'Delivery' }] : null;
-        extra = `<div class="grid" style="--min:240px;--g:12px;padding:0 20px 20px">
-          ${ways ? `<fieldset><legend style="font-size:14px">How you get it</legend><div class="row" style="--g:8px">${ways.map((w) => `<button type="button" class="chip chip-md" data-shop="${g.shopId}" data-how="${w.id}" aria-pressed="${w.id === g.how}">${w.label}</button>`).join('')}</div></fieldset>` : ''}
-          <div class="field"><label for="date-${g.shopId}" style="font-size:14px">Needed by</label><input id="date-${g.shopId}" class="input" style="min-height:44px;border-radius:10px" data-meta="date" data-shop="${g.shopId}" placeholder="Sat 14 Dec, 2 to 4 pm" value="${esc(g.meta.date || '')}"></div>
-          <div class="field" style="grid-column:1/-1"><label for="notes-${g.shopId}" style="font-size:14px">Notes for ${esc(g.shopId === 'rosa' ? 'Aling Rosa' : 'the seller')} (optional)</label><textarea id="notes-${g.shopId}" rows="2" class="input" style="border-radius:10px" data-meta="notes" data-shop="${g.shopId}" placeholder="Less sweet if possible, for a birthday">${esc(g.meta.notes || '')}</textarea></div>
+      const delivery = g.how === 'seller'
+        ? `${esc(g.shop.deliverNote)}${g.shipping ? ' · ' + fmt(g.shipping) + ' delivery fee' : ''}.`
+        : `Courier from ${esc(g.shop.area)}, 3 to 5 days · ${fmt(g.shipping)} delivery fee.`;
+      const who = g.shop.short || 'the seller';
+      const extra = `<div class="grid" style="--min:240px;--g:12px;padding:0 20px 20px">
+          <div class="note note-grey small" style="grid-column:1/-1;line-height:1.5;border-radius:12px"><strong>Delivery:</strong> ${delivery}</div>
+          <div class="field"><label for="date-${g.shopId}" style="font-size:14px">Needed by</label><input id="date-${g.shopId}" class="input" style="min-height:44px;border-radius:10px" data-meta="date" data-shop="${g.shopId}" placeholder="Sat 14 Dec, afternoon" value="${esc(g.meta.date || '')}"></div>
+          <div class="field" style="grid-column:1/-1"><label for="notes-${g.shopId}" style="font-size:14px">Notes for ${esc(who)} (optional)</label><textarea id="notes-${g.shopId}" rows="2" class="input" style="border-radius:10px" data-meta="notes" data-shop="${g.shopId}" placeholder="Less sweet if possible, for a birthday">${esc(g.meta.notes || '')}</textarea></div>
         </div>`;
-      } else {
-        extra = `<div class="small muted" style="padding:0 20px 20px">Delivery by courier${g.shop.area ? ' from ' + esc(g.shop.area) : ''}, 3 to 5 days. The fee is quoted when you pay.</div>`;
-      }
       return `<section class="panel" aria-label="${esc(g.shop.name)}"><div class="panel-head">${shopName}${badge}</div>${lines}${extra}</section>`;
     }).join('');
 
-    const total = groups.reduce((n, g) => n + g.subtotal, 0);
-    document.getElementById('items-total').textContent = fmt(total);
-    document.getElementById('so-far').textContent = fmt(total);
-    const confirm = groups.filter((g) => g.confirmFirst);
-    document.getElementById('go').textContent = confirm.length ? 'Send request to sellers' : 'Continue to payment';
-    const who = confirm.length === 1 ? (confirm[0].shopId === 'rosa' ? 'Aling Rosa' : confirm[0].shop.name) : 'Each made-to-order seller';
-    const steps = confirm.length
-      ? [`${who} gets a text and confirms. ${confirm.length === 1 && confirm[0].shopId === 'rosa' ? 'She usually answers' : 'Sellers usually answer'} within 30 minutes.`,
-         `You then pay for ${groups.length > 1 ? (groups.length === 2 ? 'both shops' : 'all shops') : 'your order'} in one checkout.`,
-         'Iskaparate holds your payment until each order arrives.']
-      : ['You pay in one checkout with GCash, Maya, QR Ph, card or online banking.', 'Iskaparate holds your payment until each order arrives.'];
+    const items = groups.reduce((n, g) => n + g.subtotal, 0);
+    const fees = groups.reduce((n, g) => n + g.shipping, 0);
+    document.getElementById('items-total').textContent = fmt(items);
+    document.getElementById('delivery-total').textContent = fees ? fmt(fees) : 'Free';
+    document.getElementById('so-far').textContent = fmt(items + fees);
+    document.getElementById('go').textContent = groups.length > 1 ? 'Send request to sellers' : 'Send request to seller';
+    const steps = [
+      `${groups.length > 1 ? 'Each seller gets' : (groups[0].shop.short || 'The seller') + ' gets'} a text and confirms ${groups.length > 1 ? 'they' : 'they'} can fill your order. Most answer within 30 minutes.`,
+      'Only then do you pay, with GCash, Maya or InstaPay. Nothing is charged before the seller says yes.',
+      'Iskaparate holds your payment until your order is delivered.'
+    ];
     document.getElementById('how-it-works').innerHTML = steps.map((s) => `<li>${esc(s)}</li>`).join('');
-    document.getElementById('leave-note').hidden = !confirm.length;
   }
 
   groupsEl.addEventListener('click', (e) => {
@@ -103,7 +100,6 @@
     if (b.dataset.less) { const l = line(b.dataset.less); if (l.qty <= 1) cart.remove(l.key); else cart.setQty(l.key, l.qty - 1); render(); }
     else if (b.dataset.more) { const l = line(b.dataset.more); cart.setQty(l.key, Math.min(24, l.qty + 1)); render(); }
     else if (b.dataset.remove) { cart.remove(b.dataset.remove); ISK.toast('Removed from cart'); render(); }
-    else if (b.dataset.how) { cart.setShopMeta(b.dataset.shop, { how: b.dataset.how }); render(); }
   });
   groupsEl.addEventListener('input', (e) => { const el = e.target; if (el.dataset.meta) cart.setShopMeta(el.dataset.shop, { [el.dataset.meta]: el.value }); });
   document.getElementById('restore').addEventListener('click', () => { cart.reset(); render(); });

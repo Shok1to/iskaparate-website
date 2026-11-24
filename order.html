@@ -19,27 +19,15 @@
 (function () {
   const { fmt, esc, store, toast } = ISK;
   const sample = {
-    id: '4821', total: 1390, method: 'GCash', day: 'Mon 9 Dec', time: '10:02 am',
+    id: '4821', total: 1490, method: 'GCash', day: 'Mon 9 Dec', time: '10:02 am',
     groups: [
-      { shopId: 'rosa', name: 'Kusina ni Aling Rosa', how: 'pickup', pickup: 'Pickup in Cubao', date: 'Sat 14 Dec, 2 to 4 pm', confirmFirst: true, subtotal: 560, shipping: 0, lines: [{ name: 'Ube halaya, 500 g', qty: 2, total: 560 }] },
-      { shopId: 'habi', name: 'Habi Iloilo Weaves', how: 'delivery', confirmFirst: false, subtotal: 650, shipping: 180, lines: [{ name: 'Banig placemats, set of 4', qty: 1, total: 650 }] }
+      { shopId: 'rosa', name: 'Kusina ni Aling Rosa', short: 'Aling Rosa', area: 'Cubao, Quezon City', how: 'seller', date: 'Sat 14 Dec, afternoon', subtotal: 560, shipping: 100, lines: [{ name: 'Ube halaya, 500 g', qty: 2, total: 560 }] },
+      { shopId: 'habi', name: 'Habi Iloilo Weaves', area: 'Iloilo City', how: 'courier', subtotal: 650, shipping: 180, lines: [{ name: 'Banig placemats, set of 4', qty: 1, total: 650 }] }
     ]
   };
   const order = store.get('isk-last-order', null) || sample;
   const received = store.get('isk-received', {});
-  const seller = (g) => (g.shopId === 'rosa' ? 'Aling Rosa' : g.name);
-
-  // Sample QR pattern (not a real code), as in the prototype
-  const qr = [];
-  for (let y = 0; y < 25; y++) for (let x = 0; x < 25; x++) {
-    let dark = ((x * 7 + y * 13 + x * y * 3) % 5) < 2;
-    for (const [cx, cy] of [[0, 0], [18, 0], [0, 18]]) {
-      const dx = x - cx, dy = y - cy;
-      if (dx >= 0 && dx < 7 && dy >= 0 && dy < 7) dark = dx === 0 || dx === 6 || dy === 0 || dy === 6 || (dx >= 2 && dx <= 4 && dy >= 2 && dy <= 4);
-    }
-    qr.push(dark);
-  }
-  const qrHTML = `<div class="qr" role="img" aria-label="Pickup QR code, sample">${qr.map((d) => `<span${d ? ' class="d"' : ''}></span>`).join('')}</div>`;
+  const seller = (g) => g.short || g.name;
 
   function timeline(steps, current) {
     return `<ol class="timeline">${steps.map((s, i) => `<li><div class="tl-rail"><span class="tl-dot ${i < current ? 'done' : i === current ? 'now' : 'later'}"></span>${i < steps.length - 1 ? '<span class="tl-line"></span>' : ''}</div><div class="tl-body"><span class="bold" style="font-size:15px">${esc(s[0])}</span><span class="small muted">${esc(s[1])}</span></div></li>`).join('')}</ol>`;
@@ -48,47 +36,38 @@
   function render() {
     root.innerHTML = `<div class="stack" style="--g:8px"><h1 class="h1">Order #${esc(order.id)}</h1><p class="muted">Paid ${fmt(order.total)} with ${esc(order.method)} on ${esc(order.day)} · ${order.groups.length} shop${order.groups.length === 1 ? '' : 's'}</p></div>` +
       order.groups.map((g) => {
-        const pickup = g.how === 'pickup';
-        const when = g.date || (pickup ? 'Sat 14 Dec, from 2 pm' : 'Expected in 3 to 5 days');
+        const bySeller = g.how === 'seller';
+        const when = g.date || 'Expected in 3 to 5 days';
         const got = !!received[g.shopId];
-        let steps, current, status, pillClass;
-        if (g.confirmFirst) {
-          steps = [['Request sent', order.day + ', ' + order.time], ['Accepted by ' + seller(g), order.day], ['Paid with ' + order.method, order.day], ['Being made', 'Before ' + when],
-            [pickup ? 'Ready for pickup' : 'Out for delivery', when], [pickup ? 'Picked up' : 'Delivered', pickup ? 'Scan the QR code at pickup' : 'Tap “I received it”'],
-            ['Return window', '3 days after ' + (pickup ? 'pickup' : 'delivery')], ['Seller paid', 'After the return window']];
-          current = got ? 6 : 4;
-        } else {
-          steps = [['Paid with ' + order.method, order.day], ['Packed by ' + g.name, 'Within 1 day'], ['With the courier', 'Within 2 days'], ['Delivered', when],
-            ['Return window', '3 days after delivery'], ['Seller paid', 'After the return window']];
-          current = got ? 4 : 2;
-        }
-        status = got ? 'In return window' : steps[current][0];
-        pillClass = got ? 'pill-green' : (current === 4 && pickup ? 'pill-gold' : '');
+        const steps = [
+          ['Request sent', order.day + ', ' + order.time],
+          ['Confirmed by ' + seller(g), order.day],
+          ['Paid with ' + order.method, order.day],
+          ['Being prepared', 'Before ' + when],
+          [bySeller ? 'Out for delivery with ' + seller(g) : 'With the courier', when],
+          ['Delivered', 'Tap “I received it”'],
+          ['Return window', '3 days after delivery'],
+          ['Seller paid', 'After the return window']
+        ];
+        const current = got ? 6 : 4;
+        const status = got ? 'In return window' : steps[current][0];
         const items = g.lines.map((l) => `${esc(l.name)} × ${l.qty}`).join(', ');
-        const money = fmt(g.subtotal) + (g.shipping ? ' + ' + fmt(g.shipping) + ' courier' : '');
-        const side = pickup ? `
-          <div class="stack" style="--g:16px">
-            <div class="stack" style="border:2px solid var(--navy);border-radius:20px;padding:22px;--g:14px;align-items:center;text-align:center">
-              <span class="bold" style="font-size:17px">${got ? 'Picked up. Salamat!' : 'Show this at pickup'}</span>
-              ${got ? '' : qrHTML + '<span class="small muted">No signal? Read out code <strong style="color:var(--navy);letter-spacing:.08em">482 913</strong></span>'}
-              <span class="small" style="line-height:1.5">[PICKUP ADDRESS], Cubao, Quezon City<br>${esc(when)}</span>
-              <div class="row" style="--g:8px;justify-content:center">
-                <button type="button" class="btn btn-primary btn-sm" data-msg="${esc(seller(g))}">Message ${esc(seller(g))}</button>
-                <a class="btn btn-outline btn-sm" href="https://www.google.com/maps/search/?api=1&query=Cubao%2C%20Quezon%20City" target="_blank" rel="noopener">Get directions</a>
-              </div>
-              ${got ? '' : `<button type="button" class="btn btn-quiet" data-got="${g.shopId}">Prototype: seller scans the QR code</button>`}
+        const money = fmt(g.subtotal) + (g.shipping ? ' + ' + fmt(g.shipping) + ' delivery' : '');
+        const side = `
+          <div class="stack" style="--g:14px">
+            <div class="card stack" style="--g:6px;padding:18px">
+              <span class="bold">${bySeller ? 'Delivered by ' + esc(seller(g)) : 'Courier delivery'}</span>
+              <span class="small muted">${bySeller ? esc(seller(g)) + ' will text you when the order is on the way.' : '[COURIER] · waybill [WAYBILL NUMBER]'}</span>
+              <span class="small muted">${esc(when)}</span>
             </div>
-            <div class="note note-grey small" style="line-height:1.55"><strong>Your ${fmt(g.subtotal)} is protected.</strong> If something is wrong, report it within 3 days of pickup and the payment stays on hold until Iskaparate Support decides.</div>
-          </div>` : `
-          <div class="stack" style="--g:12px">
-            <div class="card stack" style="--g:6px;padding:18px"><span class="bold">Courier tracking</span><span class="small muted">[COURIER] · waybill [WAYBILL NUMBER]</span><span class="small muted">${esc(when)}</span></div>
             <div class="row" style="--g:8px">
-              ${got ? '<span class="pill pill-green">Received · return window open</span>' : `<button type="button" class="btn btn-outline btn-sm" data-got="${g.shopId}">I received it</button>`}
+              ${got ? '<span class="pill pill-green">Received · return window open</span>' : `<button type="button" class="btn btn-primary btn-sm" data-got="${g.shopId}">I received it</button>`}
               <button type="button" class="btn btn-link" style="background:none" data-report="1">Report a problem</button>
             </div>
+            <div class="note note-grey small" style="line-height:1.55"><strong>Your ${fmt(g.subtotal)} is protected.</strong> If something is wrong, report it within 3 days of delivery and the payment stays on hold until Iskaparate Support decides.</div>
           </div>`;
         return `<section class="panel" style="border-radius:20px" aria-label="${esc(g.name)} order">
-          <div class="panel-head" style="padding:18px 22px"><div class="stack" style="--g:2px"><span class="bold" style="font-size:18px">${esc(g.name)}</span><span class="small muted">${items} · ${money}</span></div><span class="pill ${pillClass}" style="font-size:14px;font-weight:700;padding:8px 14px">${esc(status)}</span></div>
+          <div class="panel-head" style="padding:18px 22px"><div class="stack" style="--g:2px"><span class="bold" style="font-size:18px">${esc(g.name)}</span><span class="small muted">${items} · ${money}</span></div><span class="pill ${got ? 'pill-green' : 'pill-gold'}" style="font-size:14px;font-weight:700;padding:8px 14px">${esc(status)}</span></div>
           <div class="grid" style="--min:360px;--g:32px;padding:22px">${timeline(steps, current)}${side}</div>
         </section>`;
       }).join('') +
@@ -99,7 +78,6 @@
     const b = e.target.closest('button'); if (!b) return;
     if (b.dataset.got) { received[b.dataset.got] = true; store.set('isk-received', received); toast('Thanks! The 3-day return window has started.'); render(); }
     if (b.dataset.report) toast('Support will contact you. Your payment stays on hold until then.');
-    if (b.dataset.msg) toast('Messaging opens in the Iskaparate app after sign-in');
   });
   render();
 })();

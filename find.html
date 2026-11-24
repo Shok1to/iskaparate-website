@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Can’t find it? Ask Iskaparate</title>
+<meta name="description" content="Tell Iskaparate what you are looking for. We check our own vendors first, then other trusted shops, and send you the options.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/css/styles.css">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<style>
+  .chat { display: flex; flex-direction: column; gap: 12px; padding: 20px; min-height: 420px; max-height: 64vh; overflow-y: auto; background: var(--bg-3); }
+  .bubble { max-width: 86%; padding: 12px 14px; border-radius: 16px; font-size: 15px; line-height: 1.5; }
+  .bubble.bot { background: var(--white); border: 1px solid var(--line); align-self: flex-start; border-bottom-left-radius: 4px; }
+  .bubble.me { background: var(--navy); color: var(--white); align-self: flex-end; border-bottom-right-radius: 4px; }
+  .quick { display: flex; flex-wrap: wrap; gap: 8px; align-self: flex-start; }
+  .mini { display: flex; gap: 10px; align-items: center; background: var(--white); border: 1px solid var(--line); border-radius: 12px; padding: 8px; text-decoration: none; }
+  .mini .ph { width: 56px; height: 56px; border-radius: 8px; flex: none; padding: 0; }
+  .composer { display: flex; gap: 8px; padding: 14px; border-top: 1px solid var(--line); background: var(--white); }
+  .typing { color: var(--text-2); font-style: italic; }
+</style>
+</head>
+<body data-page="find">
+<div id="site-header"></div>
+<main class="container grid" style="--min:360px;--g:32px;align-items:start;padding-top:36px;padding-bottom:72px">
+  <section class="stack" style="--g:16px">
+    <p class="eyebrow">Can’t find it?</p>
+    <h1 class="display" style="font-size:40px;line-height:1.05">Tell us what you need. We’ll find it for you.</h1>
+    <ol class="stack small" style="margin:0;padding-left:20px;--g:10px;line-height:1.55;font-size:16px;color:var(--text-2)">
+      <li>We check Iskaparate’s own vendors first.</li>
+      <li>If they don’t have it, our team checks other trusted online shops.</li>
+      <li>We text you the options and prices. You choose one and pay with GCash, Maya or InstaPay.</li>
+      <li>We place the order for you and track it until it arrives.</li>
+    </ol>
+    <p class="xs muted">Prototype: answers come from sample data. In the real service, an Iskaparate team member reviews every request.</p>
+  </section>
+
+  <section class="panel" aria-label="Chat with Iskaparate" style="border-radius:20px">
+    <div class="panel-head"><span class="bold">Iskaparate helper</span><span class="pill pill-green">Usually replies in minutes</span></div>
+    <div class="chat" id="chat" aria-live="polite"></div>
+    <form class="composer" id="composer" autocomplete="off">
+      <label for="say" class="sr-only">Your message</label>
+      <input id="say" class="input" placeholder="e.g. bamboo steamer, barong for a 7-year-old" style="min-height:48px">
+      <button class="btn btn-primary" type="submit">Send</button>
+    </form>
+  </section>
+</main>
+<div id="site-footer"></div>
+
+<script src="assets/js/site.js"></script>
+<script>
+(function () {
+  const { products, shops, fmt, esc, store } = ISK;
+  const chat = document.getElementById('chat');
+  const input = document.getElementById('say');
+  const req = {};
+  let step = 'want';
+
+  function add(html, who) {
+    const d = document.createElement('div');
+    d.className = 'bubble ' + (who || 'bot'); d.innerHTML = html;
+    chat.appendChild(d); chat.scrollTop = chat.scrollHeight; return d;
+  }
+  function quick(options) {
+    const q = document.createElement('div'); q.className = 'quick';
+    q.innerHTML = options.map((o) => `<button type="button" class="chip" data-v="${esc(o)}">${esc(o)}</button>`).join('');
+    chat.appendChild(q); chat.scrollTop = chat.scrollHeight;
+    q.addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; q.remove(); handle(b.dataset.v); });
+  }
+  function bot(html, then) {
+    const t = add('<span class="typing">typing…</span>');
+    setTimeout(() => { t.innerHTML = html; chat.scrollTop = chat.scrollHeight; if (then) then(); }, 650);
+  }
+  function search(q) {
+    const words = q.toLowerCase().split(/[^a-z0-9ñ]+/).filter((w) => w.length > 2);
+    if (!words.length) return [];
+    return products.filter((p) => { const hay = [p.name, p.cardName, p.tag, p.desc, p.cat].join(' ').toLowerCase(); return words.some((w) => hay.includes(w)); }).slice(0, 4);
+  }
+
+  function handle(text) {
+    text = String(text).trim(); if (!text) return;
+    add(esc(text), 'me');
+    if (step === 'want') {
+      req.want = text;
+      const found = search(text); req.ours = found.length;
+      if (found.length) {
+        bot(`Our vendors have ${found.length === 1 ? 'this' : 'these'}:<div class="stack" style="--g:8px;margin-top:10px">${found.map((p) => `<a class="mini" href="product.html?id=${p.id}"><div class="ph">${p.img ? `<img src="${p.img}" alt="">` : ''}</div><span class="stack" style="--g:2px"><span class="bold small">${esc(p.cardName || p.name)}</span><span class="small">${p.priceText || fmt(p.price)}</span></span></a>`).join('')}</div>`,
+          () => bot('Is that what you need, or should I also check other trusted online shops for you?', () => quick(['That’s what I need', 'Check other shops too'])));
+        step = 'afterOurs';
+      } else {
+        bot('None of our vendors have that right now. I can ask our team to check other trusted online shops and send you the options. What’s your budget?', () => quick(['Under ₱500', '₱500 to ₱1,500', 'Over ₱1,500', 'No limit']));
+        step = 'budget';
+      }
+    } else if (step === 'afterOurs') {
+      if (/need/.test(text)) { bot('Great! Tap the item above to order. The seller confirms before you pay. Anything else you’re looking for?'); step = 'want'; }
+      else { bot('Sure. What’s your budget?', () => quick(['Under ₱500', '₱500 to ₱1,500', 'Over ₱1,500', 'No limit'])); step = 'budget'; }
+    } else if (step === 'budget') {
+      req.budget = text;
+      bot('When do you need it?', () => quick(['This week', 'Next week', 'No rush'])); step = 'when';
+    } else if (step === 'when') {
+      req.when = text;
+      bot('Where should it be delivered? (city or barangay)'); step = 'where';
+    } else if (step === 'where') {
+      req.where = text;
+      bot('Last one: what mobile number should we text the options to?'); step = 'phone';
+      input.setAttribute('inputmode', 'tel');
+    } else if (step === 'phone') {
+      const d = text.replace(/\D/g, '').replace(/^63/, '').replace(/^0/, '');
+      if (!/^9\d{9}$/.test(d)) { bot('That doesn’t look like a mobile number. Please type it like 0917 123 4567.'); return; }
+      req.phone = d; input.removeAttribute('inputmode');
+      const list = store.get('isk-sourcing', []); list.unshift({ ...req, at: Date.now() }); store.set('isk-sourcing', list);
+      bot(`Got it! We’re looking for <strong>${esc(req.want)}</strong> (${esc(req.budget)}, ${esc(req.when.toLowerCase())}, to ${esc(req.where)}). Our team will text you the options and prices within [RESPONSE TIME]. You pay only for the one you choose.`,
+        () => quick(['Prototype: show a sample reply', 'Look for something else']));
+      step = 'done';
+    } else if (step === 'done') {
+      if (/sample/.test(text)) {
+        const base = /Under/.test(req.budget) ? 280 : /Over/.test(req.budget) ? 1650 : 620;
+        const opts = [[base, '3 to 5 days'], [Math.round(base * 1.18 / 10) * 10, '2 to 3 days'], [Math.round(base * 0.9 / 10) * 10, '6 to 9 days']];
+        bot(`Here are 3 options for <strong>${esc(req.want)}</strong> (sample prices):<div class="stack" style="--g:8px;margin-top:10px">${opts.map((o, i) => `<div class="mini" style="justify-content:space-between"><span class="stack" style="--g:2px"><span class="bold small">Option ${'ABC'[i]}</span><span class="xs muted">From a trusted online shop · delivered in ${o[1]}</span></span><span class="bold">${fmt(o[0])}</span></div>`).join('')}</div><p class="xs muted" style="margin-top:8px">Prices include delivery. Shop names are not shown; Iskaparate places and tracks the order for you.</p>`,
+          () => quick(['Choose option A', 'Choose option B', 'Choose option C']));
+        step = 'choose';
+      } else { bot('Sure! What else are you looking for?'); step = 'want'; }
+    } else if (step === 'choose' && !/option/i.test(text)) {
+      step = 'want'; chat.lastChild.remove(); chat.querySelectorAll('.quick').forEach((q) => q.remove()); handle(text); return;
+    } else if (step === 'choose') {
+      bot('Done. We’d now text you a payment request for GCash, Maya or InstaPay. Once you pay, we place the order and send you tracking updates. Anything else?'); step = 'want';
+    }
+  }
+
+  document.getElementById('composer').addEventListener('submit', (e) => { e.preventDefault(); const v = input.value; input.value = ''; handle(v); });
+  const q = new URLSearchParams(location.search).get('q');
+  add('Hi! I’m the Iskaparate helper. What are you looking for?');
+  if (q) handle(q); else input.focus({ preventScroll: true });
+})();
+</script>
+</body>
+</html>
