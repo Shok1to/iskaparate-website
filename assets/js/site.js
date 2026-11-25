@@ -113,7 +113,7 @@
   const dict = {
     en: {
       top: 'Every seller confirms your order before you pay · Pay with GCash, Maya or InstaPay',
-      searchPh: 'Search ube halaya, banig, aircon cleaning…', search: 'Search', categories: 'Categories', wholesale: 'Wholesale', sell: 'Become a vendor', cart: 'Cart', signin: 'Can’t find it?',
+      searchPh: 'Search ube halaya, banig, aircon cleaning…', search: 'Search', categories: 'Categories', wholesale: 'Wholesale', sell: 'Become a vendor', academy: 'Iskaparate Academy', cart: 'Cart', signin: 'Can’t find it?',
       footAbout: 'An online mall for proud Filipino brands, helping nanays and micro-entrepreneurs sell online since 2020.',
       fShop: 'Shop', fSell: 'Sell and partner', fHelp: 'Help', fMarket: 'Iskaparate is a marketplace: every item is sold by an independent seller.',
       heroEyebrow: 'Online mall since 2020', heroTitle: 'Proud Filipino brands, straight from the nanays who make them.',
@@ -122,7 +122,7 @@
     },
     fil: {
       top: 'Kinukumpirma muna ng nagbebenta ang order bago ka magbayad · GCash, Maya o InstaPay',
-      searchPh: 'Maghanap ng ube halaya, banig, paglilinis ng aircon…', search: 'Hanapin', categories: 'Mga kategorya', wholesale: 'Pakyawan', sell: 'Maging vendor', cart: 'Cart', signin: 'Wala ang hanap mo?',
+      searchPh: 'Maghanap ng ube halaya, banig, paglilinis ng aircon…', search: 'Hanapin', categories: 'Mga kategorya', wholesale: 'Pakyawan', sell: 'Maging vendor', academy: 'Iskaparate Academy', cart: 'Cart', signin: 'Wala ang hanap mo?',
       footAbout: 'Online mall para sa mga ipinagmamalaking produktong Pilipino, tumutulong sa mga nanay at maliliit na negosyante mula pa noong 2020.',
       fShop: 'Mamili', fSell: 'Magbenta at makipag-partner', fHelp: 'Tulong', fMarket: 'Ang Iskaparate ay isang marketplace: bawat produkto ay ibinebenta ng isang malayang nagbebenta.',
       heroEyebrow: 'Online mall mula 2020', heroTitle: 'Ipinagmamalaking produktong Pilipino, diretso mula sa mga nanay na gumawa nito.',
@@ -165,6 +165,7 @@
     <a href="index.html#categories" data-i18n="categories">Categories</a>
     <a href="index.html#wholesale" data-i18n="wholesale">Wholesale</a>
     <a href="sell.html"${cur('sell')} data-i18n="sell">Become a vendor</a>
+    <a href="academy.html" class="nav-academy"${cur('academy')}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg><span data-i18n="academy">Iskaparate Academy</span><span class="nav-new">Free</span></a>
     <a href="cart.html" class="cart-link"${cur('cart')}>
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1D2140" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 002 1.6h7.7a2 2 0 002-1.5L21 8H6.2"/><circle cx="10" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/></svg>
       <span data-i18n="cart">Cart</span><span class="cart-count" aria-label="items in cart">0</span>
@@ -190,6 +191,7 @@
     </nav>
     <nav aria-label="Sell"><span data-i18n="fSell">Sell and partner</span>
       <a href="sell.html">Become a vendor</a>
+      <a href="academy.html">Iskaparate Academy</a>
       <a href="info.html#how-shops-run">How we run vendors’ shops</a>
       <a href="info.html#partners">Partner organisations</a>
       <a href="find.html">Find any item for me</a>

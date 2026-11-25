@@ -153,6 +153,10 @@ textarea.input { padding: 10px 12px; resize: vertical; min-height: 0; }
 .cart-link { display: inline-flex; align-items: center; gap: 8px; }
 .cart-count, .badge { min-width: 22px; height: 22px; border-radius: 999px; background: var(--gold); color: var(--navy); font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; padding: 0 6px; }
 .mainnav .btn { min-height: 44px; padding: 0 18px; }
+.mainnav a.nav-academy { display: inline-flex; align-items: center; gap: 8px; padding: 8px 10px 8px 14px; border-radius: 999px; background: var(--cream); border: 1.5px solid var(--gold); font-weight: 700; color: var(--navy); }
+.mainnav a.nav-academy:hover { background: var(--gold-soft); }
+.mainnav a.nav-academy[aria-current="page"] { background: var(--gold); box-shadow: none; }
+.nav-new { background: var(--navy); color: var(--white); font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; border-radius: 999px; padding: 3px 8px; }
 .menu-btn { display: none; margin-left: auto; background: transparent; border: 1.5px solid var(--line); border-radius: 12px; width: 44px; height: 44px; cursor: pointer; align-items: center; justify-content: center; }
 
 @media (max-width: 760px) {
@@ -271,3 +275,4 @@ textarea.input { padding: 10px 12px; resize: vertical; min-height: 0; }
 .ph > span, .ph > .ph-tag { position: relative; z-index: 1; }
 .shelf-row .ph > span { box-shadow: 0 1px 3px rgba(0,0,0,.15); }
 .photo-credit { font-size: 12px; color: var(--text-2); }
+@media (max-width: 760px) { .mainnav a.nav-academy { align-self: flex-start; margin: 6px 0; } }

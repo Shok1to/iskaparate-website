@@ -14,6 +14,7 @@ Plain HTML, CSS and JavaScript: no build step and no dependencies.
 | Vendor confirms, then buyer pays (GCash, Maya, InstaPay) | `checkout.html` |
 | Order tracking (delivered by the vendor or a courier) | `order.html` |
 | "Can't find it?" helper chat | `find.html` |
+| Iskaparate Academy and sign-up form | `academy.html` |
 | Vendor application (no vendor log-in; Iskaparate runs the shop) | `sell.html` |
 | What a vendor sees from the order text | `seller-request.html` |
 | Iskaparate staff operations console | `dashboard.html` |
