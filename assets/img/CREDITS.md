@@ -27,3 +27,5 @@ These are stand-ins: replace them with each seller's own product photos before l
 | banner.jpg | Shop banner | https://unsplash.com/photos/photo-of-people-eating-rice-sedJnjrUMM8 |
 | seller.jpg | Shop story seller photo (home page) | https://unsplash.com/photos/woman-wearing-black-and-white-floral-shirt-standing-near-bowl-evvnVaKFEa8 |
 | kitchen.jpg | Kitchen photo (shop page) | https://unsplash.com/photos/person-holding-brown-wooden-ladle---mnzh75wZ4 |
+| ac-class.jpg | Academy: hands-on training card | https://unsplash.com/photos/a-group-of-women-sitting-at-a-table-working-on-pottery-kJiPUr1KQSE |
+| ac-phone.jpg | Academy: selling support card | https://unsplash.com/photos/person-taking-photo-to-the-food-PWlf4B38YJ8 |

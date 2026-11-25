@@ -165,7 +165,7 @@
     <a href="index.html#categories" data-i18n="categories">Categories</a>
     <a href="index.html#wholesale" data-i18n="wholesale">Wholesale</a>
     <a href="sell.html"${cur('sell')} data-i18n="sell">Become a vendor</a>
-    <a href="academy.html" class="nav-academy"${cur('academy')}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg><span data-i18n="academy">Iskaparate Academy</span><span class="nav-new">Free</span></a>
+    <a href="academy.html" class="nav-academy"${cur('academy')}><span data-i18n="academy">Iskaparate Academy</span><span class="nav-new">Free</span></a>
     <a href="cart.html" class="cart-link"${cur('cart')}>
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1D2140" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 002 1.6h7.7a2 2 0 002-1.5L21 8H6.2"/><circle cx="10" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/></svg>
       <span data-i18n="cart">Cart</span><span class="cart-count" aria-label="items in cart">0</span>
